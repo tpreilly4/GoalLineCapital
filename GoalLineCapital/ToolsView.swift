@@ -11,9 +11,11 @@ struct ToolsView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.openURL) var openURL
 
-    
     @State private var showingTipCalculatorView = false
     @State private var showingExpenseSplitterView = false
+    @State private var showingMortgagePaymentCalculatorView = false
+    @State private var showingCompoundInterestCalculatorView = false
+    @State private var showingCalendlyView = false
     
     var body: some View {
         NavigationStack {
@@ -36,12 +38,12 @@ struct ToolsView: View {
                             Label("Expense Splitter", systemImage: "chart.pie")
                         }
                         Button {
-                            showingTipCalculatorView.toggle()
+                            showingMortgagePaymentCalculatorView.toggle()
                         } label : {
                             Label("Mortgage Payment Estimator", systemImage: "house")
                         }
                         Button {
-                            showingExpenseSplitterView.toggle()
+                            showingCompoundInterestCalculatorView.toggle()
                         } label : {
                             Label("Compound Interest Calculator", systemImage: "chart.line.uptrend.xyaxis")
                         }
@@ -55,7 +57,7 @@ struct ToolsView: View {
                     }
                     Section(header: Text("Contact Us")){
                         Button {
-                            if let url = URL(string: "https://calendly.com/bobby-goallinecapital/booking") { openURL(url) }
+                            showingCalendlyView.toggle()
                         } label : {
                             Label("Set up a meeting", systemImage: "calendar")
                         }
@@ -85,9 +87,35 @@ struct ToolsView: View {
                 .sheet(isPresented: $showingExpenseSplitterView) {
                     ExpenseSplitterView()
                 }
+                .sheet(isPresented: $showingMortgagePaymentCalculatorView) {
+                    MortgagePaymentCalculator()
+                }
+                .sheet(isPresented: $showingCompoundInterestCalculatorView) {
+                    CompundInterestCalculator()
+                }
+                .sheet(isPresented: $showingCalendlyView) {
+                    if let url = URL(string: "https://calendly.com/bobby-goallinecapital/booking") { SafariView(url: url)}
+                }
             }
             
         }
+    }
+}
+
+import SwiftUI
+import SafariServices
+
+struct SafariView: UIViewControllerRepresentable {
+    let url: URL
+    
+    func makeUIViewController(context: Context) -> SFSafariViewController {
+        let safariVC = SFSafariViewController(url: url)
+        // Customize the Safari view controller if needed
+        return safariVC
+    }
+    
+    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {
+        // No dynamic updates required
     }
 }
 
