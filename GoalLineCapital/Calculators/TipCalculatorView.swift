@@ -34,8 +34,8 @@ struct TipCalculatorView: View {
     
     var body: some View {
         NavigationStack{
-            Form{
-                Section{
+            Form {
+                Section("Amount"){
                     TextField("Amount", value: $checkAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                         .keyboardType(.decimalPad)
                         .focused($amountIsFocused)
@@ -63,6 +63,7 @@ struct TipCalculatorView: View {
                 Section("Amount owed per person is..."){
                     Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                 }
+                ListEndBrandingView()
             }
             .navigationTitle("Tip Calculator")
             .toolbar {

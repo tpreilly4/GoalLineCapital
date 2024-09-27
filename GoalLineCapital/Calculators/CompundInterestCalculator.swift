@@ -9,6 +9,8 @@ import SwiftUI
 import Foundation
 
 struct CompundInterestCalculator: View {
+    @Environment(\.dismiss) var dismiss
+    
     @State private var initialBalance = 0.0
     @State private var contributionAmount = 0.0
     @State private var interestRate = 7.0
@@ -90,8 +92,20 @@ struct CompundInterestCalculator: View {
                 Section("Future value"){
                     Text(calculateCompoundInterest(initialBalance: initialBalance, monthlyContribution: monthlyContributionAmount, annualInterestRate: interestRate/100, years: Double(numberOfYears), compoundingPeriodsPerYear: numberCompoundingPeriods), format: .currency(code: "USD"))
                 }
+                ListEndBrandingView()
             }
             .navigationTitle("Compound Interest Calculator")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Compound Interest Calculator").font(.headline)
+                }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Back") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }
