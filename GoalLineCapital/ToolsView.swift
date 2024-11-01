@@ -30,46 +30,51 @@ struct ToolsView: View {
                         Button {
                             showingTipCalculatorView.toggle()
                         } label : {
-                            Label("Tip Calculator", systemImage: "percent")
+                            Label("Tip Calculator", emoji: "🧾")
                         }
                         Button {
                             showingExpenseSplitterView.toggle()
                         } label : {
-                            Label("Expense Splitter", systemImage: "chart.pie")
+                            Label("Expense Splitter", emoji: "🍕")
                         }
                         Button {
                             showingMortgagePaymentCalculatorView.toggle()
                         } label : {
-                            Label("Mortgage Payment Estimator", systemImage: "house")
+                            Label("Mortgage Payment Estimator", emoji: "🏠")
                         }
                         Button {
                             showingCompoundInterestCalculatorView.toggle()
                         } label : {
-                            Label("Compound Interest Calculator", systemImage: "chart.line.uptrend.xyaxis")
+                            Label("Compound Interest Calculator", emoji: "📈")
                         }
                     }
                     Section(header: Text("Tracking")){
                         NavigationLink {
                             TrackView()
                         } label: {
-                            Label("Expense Tracker", systemImage: "dollarsign.arrow.circlepath")
+                            Label("Expense Tracker", emoji: "💸")
+                        }
+                        NavigationLink {
+                            SavingsTrackerView()
+                        } label: {
+                            Label("Savings Tracker", emoji: "💰")
                         }
                     }
-                    Section(header: Text("Contact Us")){
+                    Section(header: Text("Contact")){
                         Button {
                             showingCalendlyView.toggle()
                         } label : {
-                            Label("Set up a meeting", systemImage: "calendar")
+                            Label("Set up a meeting", emoji: "🗓️")
                         }
                         Button {
                             if let phoneURL = URL(string: "tel://9089386361") { openURL(phoneURL) }
                         } label : {
-                            Label("Call us", systemImage: "phone")
+                            Label("Call us", emoji: "📞")
                         }
                         Button {
                             if let emailURL = URL(string: "mailto:info@GoalLineCapital.com") { openURL(emailURL) }
                         } label : {
-                            Label("Email us", systemImage: "mail")
+                            Label("Email us", emoji: "✉️")
                         }
                         Button {
                             let address = "161 Madison Ave, Ste 230, Morristown, NJ 07960"
@@ -77,9 +82,18 @@ struct ToolsView: View {
                                                 openURL(mapsURL)
                                             }
                         } label : {
-                            Label("Find us", systemImage: "map")
+                            Label("Find us", emoji: "📍")
                         }
                     }
+                    ListEndBrandingView()
+                    Section{
+                        HStack{
+                            Spacer()
+                            Text("Copyright 2024. Goal Line Capital.")
+                                .font(.system(size: 12))
+                            Spacer()
+                        }
+                    }.listRowBackground(Color.clear)
                 }
                 .sheet(isPresented: $showingTipCalculatorView) {
                     TipCalculatorView()

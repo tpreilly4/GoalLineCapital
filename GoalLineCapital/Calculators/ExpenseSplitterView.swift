@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ExpenseSplitterView: View {
     var body: some View {
-        Text("Hello, Expense Splitter!")
+        Text("Expense Splitter coming soon")
+        ListEndBrandingView()
     }
 }
 
