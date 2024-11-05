@@ -10,13 +10,23 @@ import SwiftUI
 struct TipCalculatorView: View {
     @Environment(\.dismiss) var dismiss
     
-    @State private var checkAmount = 0.0
+    @State private var checkAmountString = ""
     @State private var numberOfPeople = 2
     @State private var tipPercentage = 20
     
     @FocusState private var amountIsFocused: Bool
     
     let tipPercentages = [10, 15, 20, 25, 0]
+    
+    var checkAmount: Double {
+        if checkAmountString.isEmpty { return 0.0 }
+        if let decimalAmount = Double(checkAmountString) {
+            return decimalAmount
+        } else {
+            print("Error converting check amount to Double")
+            return 0.0
+        }
+    }
     
     var totalCheck: Double {
         let tipValue = checkAmount / 100 * Double(tipPercentage)
@@ -36,8 +46,7 @@ struct TipCalculatorView: View {
         NavigationStack{
             Form {
                 Section("Amount"){
-                    TextField("Amount", value: $checkAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                        .keyboardType(.decimalPad)
+                    DollarAmountTextField(amount: $checkAmountString)
                         .focused($amountIsFocused)
                     
                     Picker("Number of people", selection: $numberOfPeople) {
