@@ -8,27 +8,41 @@
 import SwiftUI
 
 struct DollarAmountTextField: View {
+    var includeCents = true
     @Binding var amount: String
     @FocusState private var amountIsFocused: Bool
     var body: some View {
-        HStack{
-            Text("$")
-            TextField("Amount", text: $amount)
-                .onChange(of: amount) { oldValue, newValue in
-                    let regex = #"^\d*\.?\d{0,2}$"#
+        VStack{
+            HStack{
+                Text("$")
+                TextField("Amount", text: $amount)
+                    .onChange(of: amount) { oldValue, newValue in
+                        let regex = #"^\d*\.?\d{0,2}$"#
 
-                    if let _ = newValue.range(of: regex, options: .regularExpression) {
-                        print("Valid string for currency")
-                    } else {
-                        amount = oldValue
+                        if let _ = newValue.range(of: regex, options: .regularExpression) {
+                            print("Valid string for currency")
+                        } else {
+                            amount = oldValue
+                        }
                     }
-                }
-                .keyboardType(.decimalPad)
-                .submitLabel(.done)
-                .focused($amountIsFocused)
+                    .keyboardType(.decimalPad)
+                    .submitLabel(.done)
+                    .focused($amountIsFocused)
+            }
+            .onChange(of: amountIsFocused) {
+                self.amount = formatDollarAmount(amount) ?? amount
+            }
         }
-        .onChange(of: amountIsFocused) {
-            self.amount = formatDollarAmount(amount) ?? amount
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                HStack {
+                    Spacer()
+                    Button("Done") {
+                        amountIsFocused = false
+                    }
+                    .fontWeight(.bold)
+                }
+            }
         }
     }
     
@@ -38,9 +52,9 @@ struct DollarAmountTextField: View {
             // Format the double value to always have 2 decimal places
             let formatter = NumberFormatter()
             formatter.numberStyle = .decimal
-            formatter.minimumFractionDigits = 2
-            formatter.maximumFractionDigits = 2
-            formatter.usesGroupingSeparator = false
+            formatter.minimumFractionDigits = includeCents ? 2 : 0
+            formatter.maximumFractionDigits = includeCents ? 2 : 0
+            formatter.usesGroupingSeparator = !includeCents
             
             // Return the formatted string
             return formatter.string(from: NSNumber(value: doubleValue))

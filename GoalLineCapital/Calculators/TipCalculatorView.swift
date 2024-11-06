@@ -13,9 +13,7 @@ struct TipCalculatorView: View {
     @State private var checkAmountString = ""
     @State private var numberOfPeople = 2
     @State private var tipPercentage = 20
-    
-    @FocusState private var amountIsFocused: Bool
-    
+        
     let tipPercentages = [10, 15, 20, 25, 0]
     
     var checkAmount: Double {
@@ -47,7 +45,6 @@ struct TipCalculatorView: View {
             Form {
                 Section("Amount"){
                     DollarAmountTextField(amount: $checkAmountString)
-                        .focused($amountIsFocused)
                     
                     Picker("Number of people", selection: $numberOfPeople) {
                         ForEach(2..<100) {
@@ -76,17 +73,9 @@ struct TipCalculatorView: View {
             }
             .navigationTitle("Tip Calculator")
             .toolbar {
-                if amountIsFocused {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button("Done") {
-                            amountIsFocused = false
-                        }
-                    }
-                } else {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button("Back") {
-                            dismiss()
-                        }
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Back") {
+                        dismiss()
                     }
                 }
             }
