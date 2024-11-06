@@ -86,14 +86,6 @@ struct ToolsView: View {
                         }
                     }
                     ListEndBrandingView()
-                    Section{
-                        HStack{
-                            Spacer()
-                            Text("Copyright 2024. Goal Line Capital.")
-                                .font(.system(size: 12))
-                            Spacer()
-                        }
-                    }.listRowBackground(Color.clear)
                 }
                 .sheet(isPresented: $showingTipCalculatorView) {
                     TipCalculatorView()
