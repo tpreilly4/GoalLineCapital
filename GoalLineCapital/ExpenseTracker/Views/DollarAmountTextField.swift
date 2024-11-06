@@ -8,14 +8,18 @@
 import SwiftUI
 
 struct DollarAmountTextField: View {
-    var includeCents = true
     @Binding var amount: String
+
+    var includeCents = true
+    var placeholderText = "Amount"
+    
     @FocusState private var amountIsFocused: Bool
+    
     var body: some View {
         VStack{
             HStack{
                 Text("$")
-                TextField("Amount", text: $amount)
+                TextField(placeholderText, text: $amount)
                     .onChange(of: amount) { oldValue, newValue in
                         let regex = #"^\d*\.?\d{0,2}$"#
 
@@ -28,7 +32,12 @@ struct DollarAmountTextField: View {
                     .keyboardType(.decimalPad)
                     .submitLabel(.done)
                     .focused($amountIsFocused)
+                
             }
+            .fontWeight(.bold)
+            .font(.title)
+            .foregroundStyle(.tint)
+            .padding(5)
             .onChange(of: amountIsFocused) {
                 self.amount = formatDollarAmount(amount) ?? amount
             }
