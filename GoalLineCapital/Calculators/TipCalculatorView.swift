@@ -16,13 +16,7 @@ struct TipCalculatorView: View {
     @State private var checkIsSplit = false
     
     var billAmount: Double {
-        if checkAmountString.isEmpty { return 0.0 }
-        if let decimalAmount = Double(checkAmountString) {
-            return decimalAmount
-        } else {
-            print("Error converting check amount to Double")
-            return 0.0
-        }
+        checkAmountString.toDoubleAmount
     }
     
     var tipAmount: Double {
@@ -42,67 +36,44 @@ struct TipCalculatorView: View {
             Form {
                 
                 Section(header: Text("Bill Amount").font(.headline).foregroundStyle(.tint)){
-                    DollarAmountTextField(amount: $checkAmountString, placeholderText: "Bill amount")
+                    DollarAmountTextField(amount: $checkAmountString, placeholderText: "Enter bill amount")
                 }
                 
-                Section(header: Text("Tip Amount").font(.headline).foregroundStyle(.tint)) {
+                Section(header: Text("Tip Percentage").font(.headline).foregroundStyle(.tint)) {
                     HStack{
-                        Slider(value: $tipPercentage, in: 0...100, step: 5.0)
+                        Slider(value: $tipPercentage, in: 0...100, step: 1.0)
                         Spacer()
                         Text("\(tipPercentage.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", tipPercentage) : String(format: "%.1f", tipPercentage))%")
                     }
                 }
                 
                 Section{
-                    HStack{
-                        Text("Tip amount:")
-                        Spacer()
-                        if tipPercentage == 0 {
+                    if tipPercentage == 0 {
+                        HStack {
+                            Text("Tip amount:")
+                            Spacer()
                             Text("😢")
+                                .font(.title)
+                                .padding([.vertical],5)
                         }
-                        Text(tipAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                            .fontWeight(.bold)
-                            .font(.title)
-                            .foregroundStyle(.tint)
+                    } else {
+                        DollarOutputView(title: "Tip amount:", value: tipAmount)
                     }
-                    HStack{
-                        Text("Total with tip:")
-                        Spacer()
-                        Text(totalBill, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                            .fontWeight(.bold)
-                            .font(.title)
-                            .foregroundStyle(.tint)
-                    }
+                    DollarOutputView(title: "Total with tip:", value: totalBill)
                 }
-                
-                Section(header: Text("Splitting it with others?").font(.headline).foregroundStyle(.tint))
-                {
-                    Picker("", selection: $checkIsSplit) {
-                        ForEach([false, true], id:\.self) {
-                            Text($0 == true ? "Yes" : "No")
+
+                Section(header: Text("Splitting it with others?").font(.headline).foregroundStyle(.tint)) {
+                    YesNoPicker(selection: $checkIsSplit)
+                    if checkIsSplit {
+                        Picker("How many people?", selection: $numberOfPeople) {
+                            ForEach(2..<21) { num in
+                                Text("\(num) people")
+                                    .tag(num)
+                            }
                         }
+                        .pickerStyle(.menu)
+                        DollarOutputView(title: "Total per person:", value: totalPerPerson)
                     }
-                    .pickerStyle(.segmented)
-                    
-                    Section{
-                        if checkIsSplit {
-                            Picker("How many people?", selection: $numberOfPeople) {
-                                ForEach(2..<26) { num in
-                                    Text("\(num) people")
-                                        .tag(num)
-                                }
-                            }
-                            .pickerStyle(.menu)
-                            HStack{
-                                Text("Total per person:")
-                                Spacer()
-                                Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                                    .fontWeight(.bold)
-                                    .font(.title)
-                                    .foregroundStyle(.tint)
-                            }
-                        }
-                    }.transition(.slide)
                 }
                 ListEndBrandingView()
             }
