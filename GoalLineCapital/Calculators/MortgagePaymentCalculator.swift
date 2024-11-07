@@ -10,15 +10,43 @@ import SwiftUI
 struct MortgagePaymentCalculator: View {
     @Environment(\.dismiss) var dismiss
     
-    @State private var homePrice = 300000.00
-    @State private var downPaymentAmount = 60000.00
-    //@State private var downPaymentPercentage = 0.2
+    @State private var includeTaxesAndFees = false
     @State private var loanTermYears = 30
-    @State private var interestRate = 3.0
-    @State private var propertyTax = 0.0
-    @State private var homeInsurance = 0.0
-    @State private var pmiAmount = 0.0
-    @State private var hoaAmount = 0.0
+    @State private var interestRate = 0.05
+    
+    @State private var homePriceString = ""
+    var homePrice: Double {
+        homePriceString.toDoubleAmount
+    }
+
+    @State private var downPaymentAmountString = ""
+    var downPaymentAmount: Double {
+        downPaymentAmountString.toDoubleAmount
+    }
+
+    @State private var propertyTaxString = ""
+    var propertyTax: Double {
+        propertyTaxString.toDoubleAmount
+    }
+    @State private var propertyTaxTerm = TermType.yearly
+
+    @State private var homeInsuranceString = ""
+    var homeInsurance: Double {
+        homeInsuranceString.toDoubleAmount
+    }
+    @State private var homeInsuranceTerm = TermType.yearly
+
+    @State private var pmiAmountString = ""
+    var pmiAmount: Double {
+        pmiAmountString.toDoubleAmount
+    }
+    @State private var pmiTerm = TermType.monthly
+
+    @State private var hoaAmountString = ""
+    var hoaAmount: Double {
+        hoaAmountString.toDoubleAmount
+    }
+    @State private var hoaFeesTerm = TermType.monthly
     
     var estimatedMonthlyPayment : Double {
         return calculateMonthlyPayment()
@@ -31,101 +59,103 @@ struct MortgagePaymentCalculator: View {
             Form {
                 Section(header: Text("Mortgage Details")) {
                     HStack {
-                        Text("Home Price")
-                        Spacer()
-                        TextField("Enter Home Price", value: $homePrice, format: .currency(code: "USD"))
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 150)
+                        DollarAmountTextField(amount: $homePriceString, placeholderText: "Enter home price", includeCents: false)
                     }
                     HStack {
-                        Text("Down Payment Amount")
-                        Spacer()
-                        TextField("Enter Down Payment", value: $downPaymentAmount, format: .currency(code: "USD"))
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 150)
+                        DollarAmountTextField(amount: $downPaymentAmountString, placeholderText: "Enter down payment", includeCents: false)
                     }
-                }
-                Section ("Interest rate") {
-                    HStack{
-                        Slider(value: $interestRate, in: 0...10, step:0.1)
-                            .frame(maxWidth: 260)
-                        Spacer()
-                        Text("\(interestRate.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", interestRate) : String(format: "%.1f", interestRate))%")
-                    }
-                }
-                Section("Loan Term (Years") {
-                    Picker("Term", selection: $loanTermYears) {
-                        ForEach(loanTermOptions, id: \.self) {
-                            Text("\($0)")
+                    HStack {
+                        Text("Loan term (years):")
+                        Picker("Term", selection: $loanTermYears) {
+                            ForEach(loanTermOptions, id: \.self) {
+                                Text("\($0)")
+                            }
                         }
+                        .pickerStyle(.segmented)
                     }
-                    .pickerStyle(.segmented)
                     
                 }
                 
-                Section(header: Text("Additional Expenses")) {
-                    HStack {
-                        Text("Property Tax (Yearly)")
-                        Spacer()
-                        TextField("Enter Property Tax", value: $propertyTax, format: .currency(code: "USD"))
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 150)
-                    }
-                    HStack {
-                        Text("Home Insurance (Yearly)")
-                        Spacer()
-                        TextField("Enter Home Insurance", value: $homeInsurance, format: .currency(code: "USD"))
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 150)
-                    }
-                    HStack {
-                        Text("PMI (Monthly)")
-                        Spacer()
-                        TextField("Enter PMI", value: $pmiAmount, format: .currency(code: "USD"))
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 150)
-                    }
-                    HStack {
-                        Text("HOA Fees (Monthly)")
-                        Spacer()
-                        TextField("Enter HOA Fees", value: $hoaAmount, format: .currency(code: "USD"))
-                            .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 150)
+                Section ("Interest rate") {
+                    HStack{
+                        Slider(value: $interestRate, in: 0...0.10, step:0.001)
+                            .frame(maxWidth: 260)
+                        TextField("Rate", value: $interestRate, format: .percent)
+                            .frame(minWidth: 0, maxWidth: 60)
                     }
                 }
-                Section(header: Text("Estimated Monthly Payment")) {
-                    Text("$\(calculateMonthlyPayment(), specifier: "%.2f")")
-                        .font(.title2)
-                        .foregroundColor(.blue)
+                
+                Section(header: Text("Include Taxes and Fees?").font(.headline).foregroundStyle(.tint))
+                {
+                    YesNoPicker(selection: $includeTaxesAndFees)
                 }
+                
+                if includeTaxesAndFees {
+                    
+                    Section("Property Tax") {
+                        DollarAmountTextField(amount: $propertyTaxString, placeholderText: "Enter property tax", includeCents: false)
+                        Picker("Term", selection: $propertyTaxTerm) {
+                            ForEach(TermType.allCases, id: \.self) {
+                                Text("\($0)")
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    
+                    Section("Home Insurance") {
+                        DollarAmountTextField(amount: $homeInsuranceString, placeholderText: "Enter home insurance", includeCents: false)
+                        Picker("Term", selection: $homeInsuranceTerm) {
+                            ForEach(TermType.allCases, id: \.self) {
+                                Text("\($0)")
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    
+                    Section("PMI") {
+                        DollarAmountTextField(amount: $pmiAmountString, placeholderText: "Enter PMI", includeCents: false)
+                        Picker("Term", selection: $pmiTerm) {
+                            ForEach(TermType.allCases, id: \.self) {
+                                Text("\($0)")
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                    
+                    Section("HOA Fees") {
+                        DollarAmountTextField(amount: $hoaAmountString, placeholderText: "Enter HOA fees", includeCents: false)
+                        Picker("Term", selection: $hoaFeesTerm) {
+                            ForEach(TermType.allCases, id: \.self) {
+                                Text("\($0)")
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                    }
+                }
+                
+                Section() {
+                    DollarOutputView(title:"Estimated Monthly Payment:", value: calculateMonthlyPayment())
+                }
+                
                 ListEndBrandingView()
+                    .transition(.slide)
             }
-            .navigationTitle("Mortgage Payment Estimator")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Mortgage Estimator")
             .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("Mortgage Payment Estimator").font(.headline)
-                }
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Back") {
                         dismiss()
                     }
                 }
             }
+            .animation(.easeInOut, value: includeTaxesAndFees)
         }
     }
     
     private func calculateMonthlyPayment() -> Double {
-        print("Hello")
         var payment = 0.0
         let loanAmount = homePrice - downPaymentAmount
-        let monthlyRate = (interestRate/100) / 12
+        let monthlyRate = interestRate / 12
         let totalPayments = loanTermYears * 12
         
         // Check if interest rate is zero to avoid division by zero
@@ -135,10 +165,15 @@ struct MortgagePaymentCalculator: View {
             payment = loanAmount * (monthlyRate * pow(1 + monthlyRate, Double(totalPayments))) / (pow(1 + monthlyRate, Double(totalPayments)) - 1)
         }
         
-        // Add additional expenses (Property Tax, PMI, and HOA) if applicable
-        let monthlyPropertyTax = propertyTax / 12
-        let monthlyHomeInsurance = homeInsurance / 12
-        payment += monthlyPropertyTax + monthlyHomeInsurance + pmiAmount + hoaAmount
+        if includeTaxesAndFees {
+            // Add additional expenses (Property Tax, PMI, and HOA) if applicable
+            let monthlyPropertyTax = propertyTax / propertyTaxTerm.divisor
+            let monthlyHomeInsurance = homeInsurance / homeInsuranceTerm.divisor
+            let monthlyPmi = pmiAmount / pmiTerm.divisor
+            let monthlyHoa = hoaAmount / hoaFeesTerm.divisor
+            payment += monthlyPropertyTax + monthlyHomeInsurance + monthlyPmi + monthlyHoa
+        }
+        
         return payment
     }
 }
