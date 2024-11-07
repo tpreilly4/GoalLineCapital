@@ -9,9 +9,9 @@ import SwiftUI
 
 struct DollarAmountTextField: View {
     @Binding var amount: String
-
-    var includeCents = true
+    
     var placeholderText = "Amount"
+    var includeCents = true
     
     @FocusState private var amountIsFocused: Bool
     
@@ -32,7 +32,15 @@ struct DollarAmountTextField: View {
                     .keyboardType(.decimalPad)
                     .submitLabel(.done)
                     .focused($amountIsFocused)
-                
+                if !amount.isEmpty {
+                    Button {
+                        amount = ""
+                    } label: {
+                        Image(systemName: "x.circle.fill")
+                            .font(.headline)
+                            .foregroundStyle(.gray)
+                    }
+                }
             }
             .fontWeight(.bold)
             .font(.title)
