@@ -1,5 +1,5 @@
 //
-//  CompundInterestCalculator.swift
+//  CompundInterestCalculatorView.swift
 //  GoalLineCapital
 //
 //  Created by Tom Reilly on 9/27/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Foundation
 
-struct CompundInterestCalculator: View {
+struct CompundInterestCalculatorView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var initialBalanceString = ""
@@ -119,5 +119,5 @@ struct CompundInterestCalculator: View {
 
 
 #Preview {
-    CompundInterestCalculator()
+    CompundInterestCalculatorView()
 }

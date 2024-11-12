@@ -1,5 +1,5 @@
 //
-//  MortgagePaymentCalculator.swift
+//  MortgagePaymentCalculatorView.swift
 //  GoalLineCapital
 //
 //  Created by Tom Reilly on 9/27/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MortgagePaymentCalculator: View {
+struct MortgagePaymentCalculatorView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var includeTaxesAndFees = false
@@ -175,5 +175,5 @@ struct MortgagePaymentCalculator: View {
 }
 
 #Preview {
-    MortgagePaymentCalculator()
+    MortgagePaymentCalculatorView()
 }

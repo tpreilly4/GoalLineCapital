@@ -1,5 +1,5 @@
 //
-//  ToolsView.swift
+//  HomeView.swift
 //  GoalLineCapital
 //
 //  Created by Tom Reilly on 9/25/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ToolsView: View {
+struct HomeView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.openURL) var openURL
 
@@ -50,7 +50,7 @@ struct ToolsView: View {
                     }
                     Section(header: Text("Tracking")){
                         NavigationLink {
-                            TrackView()
+                            ExpenseTrackerView()
                         } label: {
                             Label("Expense Tracker", emoji: "💸")
                         }
@@ -94,10 +94,10 @@ struct ToolsView: View {
                     ExpenseSplitterView()
                 }
                 .sheet(isPresented: $showingMortgagePaymentCalculatorView) {
-                    MortgagePaymentCalculator()
+                    MortgagePaymentCalculatorView()
                 }
                 .sheet(isPresented: $showingCompoundInterestCalculatorView) {
-                    CompundInterestCalculator()
+                    CompundInterestCalculatorView()
                 }
                 .sheet(isPresented: $showingCalendlyView) {
                     if let url = URL(string: "https://calendly.com/bobby-goallinecapital/booking") { SafariView(url: url)}
@@ -126,5 +126,5 @@ struct SafariView: UIViewControllerRepresentable {
 }
 
 #Preview {
-    ToolsView()
+    HomeView()
 }

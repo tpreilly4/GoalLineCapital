@@ -1,5 +1,5 @@
 //
-//  TrackView.swift
+//  ExpenseTrackerView.swift
 //  GoalLineCapital
 //
 //  Created by Tom Reilly on 9/25/24.
@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct TrackView: View {
+struct ExpenseTrackerView: View {
     @Environment(\.modelContext) var modelContext
     @Query(sort: \ExpenseItem.date, order:.reverse) var allExpenses: [ExpenseItem]
     
@@ -90,5 +90,5 @@ struct TrackView: View {
 }
 
 #Preview {
-    TrackView()
+    ExpenseTrackerView()
 }

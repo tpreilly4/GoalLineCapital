@@ -12,7 +12,7 @@ import SwiftData
 struct GoalLineCapitalApp: App {
     var body: some Scene {
         WindowGroup {
-            ToolsView()
+            HomeView()
         }
         .modelContainer(for: ExpenseItem.self)
     }
