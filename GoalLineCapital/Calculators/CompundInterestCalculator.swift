@@ -23,38 +23,8 @@ struct CompundInterestCalculator: View {
     
     @State private var interestRate = 0.07
     @State private var numberOfYears = 10.0
-    @State private var compoundingPeriodText = "Monthly"
-    @State private var contributionRateText = "Monthly"
-    
-    let compoundingPeriodOptions = ["Daily", "Monthly", "Yearly"]
-    let contributionRateOptions = ["Daily", "Weekly", "Monthly", "Yearly"]
-    
-    var numberCompoundingPeriods: Double {
-        if compoundingPeriodText == "Daily" {
-            return 365
-        } else if compoundingPeriodText == "Monthly" {
-            return 12
-        } else if compoundingPeriodText == "Yearly" {
-            return 1
-        } else {
-            return 0
-        }
-    }
-    
-    var monthlyContributionAmount: Double {
-        switch contributionRateText {
-        case "Daily":
-            return contributionAmount * 365 / 12
-        case "Monthly":
-            return contributionAmount
-        case "Weekly":
-            return contributionAmount * 52 / 12
-        case "Yearly":
-            return contributionAmount / 12
-        default:
-            return 0.0
-        }
-    }
+    @State private var compoundingRate = TimeRangeUnit.monthly
+    @State private var contributionRate = TimeRangeUnit.monthly
         
     var body: some View {
         NavigationStack {
@@ -65,9 +35,9 @@ struct CompundInterestCalculator: View {
                 Section("Contributions") {
                     VStack{
                         DollarAmountTextField(amount: $contributionAmountString, placeholderText: "Enter contributions", includeCents: false)
-                        Picker("Rate", selection: $contributionRateText) {
-                            ForEach(contributionRateOptions, id: \.self) {
-                                Text($0)
+                        Picker("Rate", selection: $contributionRate) {
+                            ForEach([TimeRangeUnit.daily, TimeRangeUnit.weekly, TimeRangeUnit.monthly, TimeRangeUnit.yearly], id: \.self) {
+                                Text("\($0)")
                             }
                         }
                         .pickerStyle(.segmented)
@@ -79,9 +49,9 @@ struct CompundInterestCalculator: View {
                     }
                     HStack{
                         Text("Compounds:")
-                        Picker("", selection: $compoundingPeriodText) {
-                            ForEach(compoundingPeriodOptions, id: \.self) {
-                                Text($0)
+                        Picker("", selection: $compoundingRate) {
+                            ForEach([TimeRangeUnit.daily, TimeRangeUnit.monthly, TimeRangeUnit.yearly], id: \.self) {
+                                Text("\($0)")
                             }
                         }
                         .pickerStyle(.segmented)
@@ -117,20 +87,29 @@ struct CompundInterestCalculator: View {
     }
     
     private func calculateCompoundInterest() -> Double {
-        let annualInterestRate = interestRate
-        // Convert annual interest rate to a decimal
-        let ratePerPeriod = annualInterestRate / numberCompoundingPeriods
+        // Special case for zero interest rate
+        if interestRate == 0 {
+            let futureValueOfInitialBalance = initialBalance
+            let futureValueOfContributions = contributionAmount * contributionRate.unitsPerYear * numberOfYears
+            return futureValueOfInitialBalance + futureValueOfContributions
+        }
+        
+        // Convert annual interest rate to a rate per compounding period
+        let ratePerCompoundingPeriod = interestRate / compoundingRate.unitsPerYear
         
         // Calculate the total number of compounding periods
-        let totalPeriods = numberCompoundingPeriods * Double(numberOfYears)
+        let totalCompoundingPeriods = compoundingRate.unitsPerYear * numberOfYears
         
-        // Calculate future value of the initial balance
-        let futureValueOfInitialBalance = initialBalance * pow(1 + ratePerPeriod, totalPeriods)
+        // Future value of the initial balance with compounding
+        let futureValueOfInitialBalance = initialBalance * pow(1 + ratePerCompoundingPeriod, totalCompoundingPeriods)
         
-        // Calculate future value of monthly contributions
-        let futureValueOfContributions = monthlyContributionAmount * (pow(1 + ratePerPeriod, totalPeriods) - 1) / ratePerPeriod
+        // Adjust monthly contributions to match the compounding period
+        let effectiveMonthlyContribution = contributionAmount * contributionRate.unitsPerYear / compoundingRate.unitsPerYear
         
-        // Sum of both to get the final future value
+        // Future value of monthly contributions with compounding
+        let futureValueOfContributions = effectiveMonthlyContribution * ((pow(1 + ratePerCompoundingPeriod, totalCompoundingPeriods) - 1) / ratePerCompoundingPeriod)
+        
+        // Sum both components to get the total future value
         let futureValue = futureValueOfInitialBalance + futureValueOfContributions
         
         return futureValue

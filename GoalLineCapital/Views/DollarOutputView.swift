@@ -17,7 +17,6 @@ struct DollarOutputView: View {
             Text(value, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                 .fontWeight(.bold)
                 .font(.title)
-                .foregroundStyle(.tint)
         }
         .padding([.vertical],5)
     }

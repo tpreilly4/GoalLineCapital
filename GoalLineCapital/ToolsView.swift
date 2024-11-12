@@ -32,11 +32,11 @@ struct ToolsView: View {
                         } label : {
                             Label("Tip Calculator", emoji: "🧾")
                         }
-                        Button {
-                            showingExpenseSplitterView.toggle()
-                        } label : {
-                            Label("Expense Splitter", emoji: "🍕")
-                        }
+//                        Button {
+//                            showingExpenseSplitterView.toggle()
+//                        } label : {
+//                            Label("Expense Splitter", emoji: "🍕")
+//                        }
                         Button {
                             showingMortgagePaymentCalculatorView.toggle()
                         } label : {
@@ -54,11 +54,11 @@ struct ToolsView: View {
                         } label: {
                             Label("Expense Tracker", emoji: "💸")
                         }
-                        NavigationLink {
-                            SavingsTrackerView()
-                        } label: {
-                            Label("Savings Tracker", emoji: "💰")
-                        }
+//                        NavigationLink {
+//                            SavingsTrackerView()
+//                        } label: {
+//                            Label("Savings Tracker", emoji: "💰")
+//                        }
                     }
                     Section(header: Text("Contact")){
                         Button {

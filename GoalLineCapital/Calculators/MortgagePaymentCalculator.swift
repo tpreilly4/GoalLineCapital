@@ -28,25 +28,25 @@ struct MortgagePaymentCalculator: View {
     var propertyTax: Double {
         propertyTaxString.toDoubleAmount
     }
-    @State private var propertyTaxTerm = TermType.yearly
+    @State private var propertyTaxTerm = TimeRangeUnit.yearly
 
     @State private var homeInsuranceString = ""
     var homeInsurance: Double {
         homeInsuranceString.toDoubleAmount
     }
-    @State private var homeInsuranceTerm = TermType.yearly
+    @State private var homeInsuranceTerm = TimeRangeUnit.yearly
 
     @State private var pmiAmountString = ""
     var pmiAmount: Double {
         pmiAmountString.toDoubleAmount
     }
-    @State private var pmiTerm = TermType.monthly
+    @State private var pmiTerm = TimeRangeUnit.monthly
 
     @State private var hoaAmountString = ""
     var hoaAmount: Double {
         hoaAmountString.toDoubleAmount
     }
-    @State private var hoaFeesTerm = TermType.monthly
+    @State private var hoaFeesTerm = TimeRangeUnit.monthly
     
     var estimatedMonthlyPayment : Double {
         return calculateMonthlyPayment()
@@ -91,7 +91,7 @@ struct MortgagePaymentCalculator: View {
                     Section("Property Tax") {
                         DollarAmountTextField(amount: $propertyTaxString, placeholderText: "Enter property tax", includeCents: false)
                         Picker("Term", selection: $propertyTaxTerm) {
-                            ForEach(TermType.allCases, id: \.self) {
+                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) {
                                 Text("\($0)")
                             }
                         }
@@ -101,7 +101,7 @@ struct MortgagePaymentCalculator: View {
                     Section("Home Insurance") {
                         DollarAmountTextField(amount: $homeInsuranceString, placeholderText: "Enter home insurance", includeCents: false)
                         Picker("Term", selection: $homeInsuranceTerm) {
-                            ForEach(TermType.allCases, id: \.self) {
+                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) {
                                 Text("\($0)")
                             }
                         }
@@ -111,7 +111,7 @@ struct MortgagePaymentCalculator: View {
                     Section("PMI") {
                         DollarAmountTextField(amount: $pmiAmountString, placeholderText: "Enter PMI", includeCents: false)
                         Picker("Term", selection: $pmiTerm) {
-                            ForEach(TermType.allCases, id: \.self) {
+                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) {
                                 Text("\($0)")
                             }
                         }
@@ -121,7 +121,7 @@ struct MortgagePaymentCalculator: View {
                     Section("HOA Fees") {
                         DollarAmountTextField(amount: $hoaAmountString, placeholderText: "Enter HOA fees", includeCents: false)
                         Picker("Term", selection: $hoaFeesTerm) {
-                            ForEach(TermType.allCases, id: \.self) {
+                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) {
                                 Text("\($0)")
                             }
                         }
@@ -163,10 +163,10 @@ struct MortgagePaymentCalculator: View {
         
         if includeTaxesAndFees {
             // Add additional expenses (Property Tax, PMI, and HOA) if applicable
-            let monthlyPropertyTax = propertyTax / propertyTaxTerm.divisor
-            let monthlyHomeInsurance = homeInsurance / homeInsuranceTerm.divisor
-            let monthlyPmi = pmiAmount / pmiTerm.divisor
-            let monthlyHoa = hoaAmount / hoaFeesTerm.divisor
+            let monthlyPropertyTax = propertyTax / propertyTaxTerm.monthsPerUnit
+            let monthlyHomeInsurance = homeInsurance / homeInsuranceTerm.monthsPerUnit
+            let monthlyPmi = pmiAmount / pmiTerm.monthsPerUnit
+            let monthlyHoa = hoaAmount / hoaFeesTerm.monthsPerUnit
             payment += monthlyPropertyTax + monthlyHomeInsurance + monthlyPmi + monthlyHoa
         }
         
