@@ -11,10 +11,18 @@ import Foundation
 struct CompundInterestCalculator: View {
     @Environment(\.dismiss) var dismiss
     
-    @State private var initialBalance = 0.0
-    @State private var contributionAmount = 0.0
-    @State private var interestRate = 7.0
-    @State private var numberOfYears = 10
+    @State private var initialBalanceString = ""
+    var initialBalance: Double {
+        initialBalanceString.toDoubleAmount
+    }
+    
+    @State private var contributionAmountString = ""
+    var contributionAmount: Double {
+        contributionAmountString.toDoubleAmount
+    }
+    
+    @State private var interestRate = 0.07
+    @State private var numberOfYears = 10.0
     @State private var compoundingPeriodText = "Monthly"
     @State private var contributionRateText = "Monthly"
     
@@ -47,18 +55,16 @@ struct CompundInterestCalculator: View {
             return 0.0
         }
     }
-    
+        
     var body: some View {
         NavigationStack {
             Form {
                 Section("Initial Balance") {
-                    TextField("Initial Balance", value: $initialBalance, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                        .keyboardType(.decimalPad)
+                    DollarAmountTextField(amount: $initialBalanceString, placeholderText: "Enter current balance", includeCents: false)
                 }
                 Section("Contributions") {
                     VStack{
-                        TextField("Initial Balance", value: $contributionAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                            .keyboardType(.decimalPad)
+                        DollarAmountTextField(amount: $contributionAmountString, placeholderText: "Enter contributions", includeCents: false)
                         Picker("Rate", selection: $contributionRateText) {
                             ForEach(contributionRateOptions, id: \.self) {
                                 Text($0)
@@ -69,14 +75,11 @@ struct CompundInterestCalculator: View {
                 }
                 Section("Interest"){
                     HStack{
-                        Slider(value: $interestRate, in: 0...25, step:0.5)
-                            .frame(maxWidth: 260)
-                        Spacer()
-                        Text("\(interestRate.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", interestRate) : String(format: "%.1f", interestRate))%")
+                        PercentSlider(value: $interestRate, range: 0...0.25, step:0.005)
                     }
                     HStack{
-                        Text("Compounds ")
-                        Picker("Compounds", selection: $compoundingPeriodText) {
+                        Text("Compounds:")
+                        Picker("", selection: $compoundingPeriodText) {
                             ForEach(compoundingPeriodOptions, id: \.self) {
                                 Text($0)
                             }
@@ -84,13 +87,17 @@ struct CompundInterestCalculator: View {
                         .pickerStyle(.segmented)
                     }
                 }
-                Picker("Years of Growth", selection: $numberOfYears) {
-                    ForEach(0..<80) {
-                        Text("\($0) years")
+                Section("Compounding For") {
+                    HStack {
+                        Slider(value: $numberOfYears, in: 0...80, step:1)
+                            .frame(maxWidth: 250)
+                        Spacer()
+                        Text("\(String(Int(numberOfYears))) years")
                     }
                 }
-                Section("Future value"){
-                    Text(calculateCompoundInterest(initialBalance: initialBalance, monthlyContribution: monthlyContributionAmount, annualInterestRate: interestRate/100, years: Double(numberOfYears), compoundingPeriodsPerYear: numberCompoundingPeriods), format: .currency(code: "USD"))
+
+                Section(){
+                    DollarOutputView(title: "Future Value:", value: calculateCompoundInterest())
                 }
                 ListEndBrandingView()
             }
@@ -108,28 +115,29 @@ struct CompundInterestCalculator: View {
             }
         }
     }
+    
+    private func calculateCompoundInterest() -> Double {
+        let annualInterestRate = interestRate
+        // Convert annual interest rate to a decimal
+        let ratePerPeriod = annualInterestRate / numberCompoundingPeriods
+        
+        // Calculate the total number of compounding periods
+        let totalPeriods = numberCompoundingPeriods * Double(numberOfYears)
+        
+        // Calculate future value of the initial balance
+        let futureValueOfInitialBalance = initialBalance * pow(1 + ratePerPeriod, totalPeriods)
+        
+        // Calculate future value of monthly contributions
+        let futureValueOfContributions = monthlyContributionAmount * (pow(1 + ratePerPeriod, totalPeriods) - 1) / ratePerPeriod
+        
+        // Sum of both to get the final future value
+        let futureValue = futureValueOfInitialBalance + futureValueOfContributions
+        
+        return futureValue
+    }
 }
 
-func calculateCompoundInterest(initialBalance: Double, monthlyContribution: Double, annualInterestRate: Double, years: Double, compoundingPeriodsPerYear: Double = 12) -> Double {
-    print("monthlyContribution: \(monthlyContribution)")
-    print("compounding periods: \(compoundingPeriodsPerYear)")
-    // Convert annual interest rate to a decimal
-    let ratePerPeriod = annualInterestRate / compoundingPeriodsPerYear
-    
-    // Calculate the total number of compounding periods
-    let totalPeriods = compoundingPeriodsPerYear * years
-    
-    // Calculate future value of the initial balance
-    let futureValueOfInitialBalance = initialBalance * pow(1 + ratePerPeriod, totalPeriods)
-    
-    // Calculate future value of monthly contributions
-    let futureValueOfContributions = monthlyContribution * (pow(1 + ratePerPeriod, totalPeriods) - 1) / ratePerPeriod
-    
-    // Sum of both to get the final future value
-    let futureValue = futureValueOfInitialBalance + futureValueOfContributions
-    
-    return futureValue
-}
+
 
 #Preview {
     CompundInterestCalculator()

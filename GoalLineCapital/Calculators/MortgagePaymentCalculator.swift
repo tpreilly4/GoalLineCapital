@@ -57,13 +57,19 @@ struct MortgagePaymentCalculator: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Mortgage Details")) {
+                Section(header: Text("Home Price")) {
                     HStack {
                         DollarAmountTextField(amount: $homePriceString, placeholderText: "Enter home price", includeCents: false)
                     }
-                    HStack {
-                        DollarAmountTextField(amount: $downPaymentAmountString, placeholderText: "Enter down payment", includeCents: false)
-                    }
+                }
+                
+                Section("Down Payment") {
+                    DollarAmountTextField(amount: $downPaymentAmountString, placeholderText: "Enter down payment", includeCents: false)
+                    
+                }
+                
+                Section ("Interest rate") {
+                    PercentSlider(value: $interestRate, range: 0...0.10, step:0.0001)
                     HStack {
                         Text("Loan term (years):")
                         Picker("Term", selection: $loanTermYears) {
@@ -72,16 +78,6 @@ struct MortgagePaymentCalculator: View {
                             }
                         }
                         .pickerStyle(.segmented)
-                    }
-                    
-                }
-                
-                Section ("Interest rate") {
-                    HStack{
-                        Slider(value: $interestRate, in: 0...0.10, step:0.001)
-                            .frame(maxWidth: 260)
-                        TextField("Rate", value: $interestRate, format: .percent)
-                            .frame(minWidth: 0, maxWidth: 60)
                     }
                 }
                 
