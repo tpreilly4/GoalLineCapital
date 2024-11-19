@@ -71,6 +71,8 @@ struct ExpenseTrackerView: View {
                     }
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(BrandingGradients().brandingGradient)
         }
     }
     

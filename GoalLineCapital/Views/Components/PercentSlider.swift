@@ -19,7 +19,6 @@ struct PercentSlider: View {
             Spacer()
             TextField("Rate", value: $value, format: .percent)
                 .frame(minWidth: 0, maxWidth: 60)
-                .foregroundStyle(.tint)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.trailing)
                 .keyboardType(.decimalPad)

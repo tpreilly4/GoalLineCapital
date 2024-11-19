@@ -12,7 +12,7 @@ struct TipCalculatorView: View {
     
     @State private var checkAmountString = ""
     @State private var numberOfPeople = 2
-    @State private var tipPercentage = 20.0
+    @State private var tipPercentage = 0.2
     @State private var checkIsSplit = false
     
     var billAmount: Double {
@@ -20,7 +20,7 @@ struct TipCalculatorView: View {
     }
     
     var tipAmount: Double {
-        return billAmount * (tipPercentage/100)
+        return billAmount * (tipPercentage)
     }
     
     var totalBill: Double {
@@ -34,17 +34,14 @@ struct TipCalculatorView: View {
     var body: some View {
         NavigationStack{
             Form {
+                ListStartBrandingView()
                 
-                Section(header: Text("Bill Amount").font(.headline).foregroundStyle(.tint)){
+                Section("Bill Amount"){
                     DollarAmountTextField(amount: $checkAmountString, placeholderText: "Enter bill amount")
                 }
                 
-                Section(header: Text("Tip Percentage").font(.headline).foregroundStyle(.tint)) {
-                    HStack{
-                        Slider(value: $tipPercentage, in: 0...100, step: 1.0)
-                        Spacer()
-                        Text("\(tipPercentage.truncatingRemainder(dividingBy: 1) == 0 ? String(format: "%.0f", tipPercentage) : String(format: "%.1f", tipPercentage))%")
-                    }
+                Section("Tip Percentage") {
+                    PercentSlider(value: $tipPercentage, range: 0...1, step: 0.01)
                 }
                 
                 Section{
@@ -79,13 +76,9 @@ struct TipCalculatorView: View {
             }
             .animation(.easeInOut, value: checkIsSplit)
             .navigationTitle("Tip Calculator")
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Back") {
-                        dismiss()
-                    }
-                }
-            }
+            .navigationBarTitleDisplayMode(.inline)
+            .scrollContentBackground(.hidden)
+            .background(BrandingGradients().brandingGradient)
         }
     }
 }

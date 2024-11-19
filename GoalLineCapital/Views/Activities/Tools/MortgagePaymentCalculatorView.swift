@@ -55,8 +55,10 @@ struct MortgagePaymentCalculatorView: View {
     let loanTermOptions = [15, 20, 30]
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
+                ListStartBrandingView()
+                
                 Section(header: Text("Home Price")) {
                     HStack {
                         DollarAmountTextField(amount: $homePriceString, placeholderText: "Enter home price", includeCents: false)
@@ -137,14 +139,10 @@ struct MortgagePaymentCalculatorView: View {
                     .transition(.slide)
             }
             .navigationTitle("Mortgage Estimator")
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Back") {
-                        dismiss()
-                    }
-                }
-            }
+            .navigationBarTitleDisplayMode(.inline)
             .animation(.easeInOut, value: includeTaxesAndFees)
+            .scrollContentBackground(.hidden)
+            .background(BrandingGradients().brandingGradient)
         }
     }
     

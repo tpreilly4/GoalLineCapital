@@ -44,22 +44,24 @@ struct DollarAmountTextField: View {
             }
             .fontWeight(.bold)
             .font(.title)
-            .foregroundStyle(.tint)
             .padding(5)
             .onChange(of: amountIsFocused) {
                 self.amount = formatDollarAmount(amount) ?? amount
             }
         }
         .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                HStack {
-                    Spacer()
-                    Button("Done") {
-                        amountIsFocused = false
+            if amountIsFocused {
+                ToolbarItemGroup(placement: .keyboard) {
+                    HStack {
+                        Spacer()
+                        Button("Done") {
+                            amountIsFocused = false
+                        }
+                        .fontWeight(.bold)
                     }
-                    .fontWeight(.bold)
                 }
             }
+            
         }
     }
     

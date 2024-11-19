@@ -20,30 +20,41 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             VStack{
+                
                 Image("GLC-logo")
                     .resizable()
                     .scaledToFit()
-                    .frame(maxWidth: 800)
-                    .padding()
+                    .frame(maxWidth: 500)
+                    .padding(.horizontal, 25)
+                    .padding(.top, 50)
+                    .background(Color.clear)
+                HStack {
+                    Spacer()
+                    Text("Guiding You to Your").font(.headline).italic()
+                    Text("Financial Goal Line").font(.headline).italic().foregroundStyle(.goalLineBlue)
+                    Spacer()
+                        
+                }.padding(.vertical)
+                
                 List{
                     Section(header: Text("Tools")){
-                        Button {
-                            showingTipCalculatorView.toggle()
-                        } label : {
+                        NavigationLink {
+                            TipCalculatorView()
+                        } label: {
                             Label("Tip Calculator", emoji: "🧾")
                         }
-//                        Button {
-//                            showingExpenseSplitterView.toggle()
+//                        NavigationLink {
+//                            ExpenseSplitterView()
 //                        } label : {
 //                            Label("Expense Splitter", emoji: "🍕")
 //                        }
-                        Button {
-                            showingMortgagePaymentCalculatorView.toggle()
+                        NavigationLink {
+                            MortgagePaymentCalculatorView()
                         } label : {
                             Label("Mortgage Payment Estimator", emoji: "🏠")
                         }
-                        Button {
-                            showingCompoundInterestCalculatorView.toggle()
+                        NavigationLink {
+                            CompoundInterestCalculatorView()
                         } label : {
                             Label("Compound Interest Calculator", emoji: "📈")
                         }
@@ -87,43 +98,17 @@ struct HomeView: View {
                     }
                     ListEndBrandingView()
                 }
-                .sheet(isPresented: $showingTipCalculatorView) {
-                    TipCalculatorView()
-                }
-                .sheet(isPresented: $showingExpenseSplitterView) {
-                    ExpenseSplitterView()
-                }
-                .sheet(isPresented: $showingMortgagePaymentCalculatorView) {
-                    MortgagePaymentCalculatorView()
-                }
-                .sheet(isPresented: $showingCompoundInterestCalculatorView) {
-                    CompundInterestCalculatorView()
-                }
                 .sheet(isPresented: $showingCalendlyView) {
                     if let url = URL(string: "https://calendly.com/bobby-goallinecapital/booking") { SafariView(url: url)}
                 }
+                .scrollContentBackground(.hidden)
+                .background(BrandingGradients().brandingGradient)
             }
-            
         }
     }
 }
 
-import SwiftUI
-import SafariServices
 
-struct SafariView: UIViewControllerRepresentable {
-    let url: URL
-    
-    func makeUIViewController(context: Context) -> SFSafariViewController {
-        let safariVC = SFSafariViewController(url: url)
-        // Customize the Safari view controller if needed
-        return safariVC
-    }
-    
-    func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {
-        // No dynamic updates required
-    }
-}
 
 #Preview {
     HomeView()

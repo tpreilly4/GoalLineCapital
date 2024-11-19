@@ -1,5 +1,5 @@
 //
-//  CompundInterestCalculatorView.swift
+//  CompoundInterestCalculatorView.swift
 //  GoalLineCapital
 //
 //  Created by Tom Reilly on 9/27/24.
@@ -8,7 +8,8 @@
 import SwiftUI
 import Foundation
 
-struct CompundInterestCalculatorView: View {
+struct CompoundInterestCalculatorView: View {
+    
     @Environment(\.dismiss) var dismiss
     
     @State private var initialBalanceString = ""
@@ -29,7 +30,9 @@ struct CompundInterestCalculatorView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Initial Balance") {
+                ListStartBrandingView()
+                
+                Section("Current Balance") {
                     DollarAmountTextField(amount: $initialBalanceString, placeholderText: "Enter current balance", includeCents: false)
                 }
                 Section("Contributions") {
@@ -43,10 +46,9 @@ struct CompundInterestCalculatorView: View {
                         .pickerStyle(.segmented)
                     }
                 }
-                Section("Interest"){
-                    HStack{
-                        PercentSlider(value: $interestRate, range: 0...0.25, step:0.005)
-                    }
+                Section("Interest Rate"){
+                    PercentSlider(value: $interestRate, range: 0...0.25, step:0.005)
+                    
                     HStack{
                         Text("Compounds:")
                         Picker("", selection: $compoundingRate) {
@@ -57,7 +59,7 @@ struct CompundInterestCalculatorView: View {
                         .pickerStyle(.segmented)
                     }
                 }
-                Section("Compounding For") {
+                Section("Compounds For") {
                     HStack {
                         Slider(value: $numberOfYears, in: 0...80, step:1)
                             .frame(maxWidth: 250)
@@ -73,16 +75,8 @@ struct CompundInterestCalculatorView: View {
             }
             .navigationTitle("Compound Interest Calculator")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("Compound Interest Calculator").font(.headline)
-                }
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Back") {
-                        dismiss()
-                    }
-                }
-            }
+            .scrollContentBackground(.hidden)
+            .background(BrandingGradients().brandingGradient)
         }
     }
     
@@ -119,5 +113,5 @@ struct CompundInterestCalculatorView: View {
 
 
 #Preview {
-    CompundInterestCalculatorView()
+    CompoundInterestCalculatorView()
 }
