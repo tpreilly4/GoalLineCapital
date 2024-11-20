@@ -21,5 +21,5 @@ struct ExpenseDetailsView: View {
 }
 
 #Preview {
-    ExpenseDetailsView(item: (ExpenseItem(amount: 50.0, date: Date.now, category: ExpenseCategory(name: "Groceries", symbol: "🛒"), details: "Whole Foods")))
+    ExpenseDetailsView(item: (ExpenseItem(amount: 50.0, date: Date.now, category: ExpenseCategory(name: "Groceries"), details: "Whole Foods")))
 }

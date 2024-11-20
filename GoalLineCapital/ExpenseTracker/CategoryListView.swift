@@ -12,7 +12,7 @@ struct CategoryListView: View {
     @Environment(\.modelContext) var modelContext
     @Query var categories: [ExpenseCategory]
     
-    @State private var showingAddNewView = false
+    @State private var showingAddCategoryAlert = false
     
     var body: some View {
         NavigationStack {
@@ -28,15 +28,15 @@ struct CategoryListView: View {
                     }
                 }
                 Button("Add New") {
-                    showingAddNewView.toggle()
+                    showingAddCategoryAlert.toggle()
                 }
             }
             .navigationTitle("Categories")
             .toolbar {
                 EditButton()
             }
-            .sheet(isPresented: $showingAddNewView) {
-                AddEditCategoryView()
+            .alert("New Category", isPresented: $showingAddCategoryAlert) {
+                AddCategoryView()
             }
         }
     }

@@ -10,16 +10,14 @@ import SwiftData
 
 @Model
 class ExpenseCategory : Identifiable, Hashable {
-    static let defaultCategory = ExpenseCategory(name: "Uncategorized", symbol: "💸")
+    static let defaultCategory = ExpenseCategory(name: "Uncategorized")
     
     var id = UUID()
     var name: String = ""
-    //var symbol: Character = "💸"
     @Relationship(inverse: \ExpenseItem.category) var items: [ExpenseItem]?
     
-    init(name: String, symbol: Character, items: [ExpenseItem] = []) {
+    init(name: String, items: [ExpenseItem] = []) {
         self.name = name
-        //self.symbol = symbol
         self.items = items
     }
 }

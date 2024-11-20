@@ -11,7 +11,7 @@ import SwiftData
 struct InputExpenseItemView: View {
     @Query var categories: [ExpenseCategory]
         
-    @State private var showingNewCategoryView = false
+    @State private var showingNewCategoryAlert = false
     
     @Binding var amount: Double
     @Binding var date: Date
@@ -38,15 +38,15 @@ struct InputExpenseItemView: View {
                         Text(cat.name)
                             .tag(cat as ExpenseCategory?)
                     }
-                    Button("Add New") { showingNewCategoryView.toggle() }
+                    Button("Add New") { showingNewCategoryAlert.toggle() }
                 }
                 .pickerStyle(.navigationLink)
             }
             .cardViewWrapper()
         }
         .padding([.horizontal,.top])
-        .sheet(isPresented: $showingNewCategoryView) {
-            AddEditCategoryView()
+        .alert("New Category", isPresented: $showingNewCategoryAlert) {
+            AddCategoryView()
         }
     }
     

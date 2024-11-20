@@ -25,48 +25,53 @@ struct EditExpenseView: View {
     @State private var isInputValid: Bool = false
         
     var body: some View {
-        VStack{
-            InputExpenseItemView(amount: $amount, date: $date, category: $category, details: $details)
-            
-            Button("Save", systemImage: "square.and.arrow.down.fill") {
-                save()
+        NavigationStack{
+            VStack{
+                InputExpenseItemView(amount: $amount, date: $date, category: $category, details: $details)
+                
+                Button("Save", systemImage: "square.and.arrow.down.fill") {
+                    save()
+                }
+                .padding()
+                .disabled(!validateInput())
+                
+                Spacer()
             }
-            .padding()
-            .disabled(!validateInput())
-            
-            Spacer()
-        }
-        .onAppear() {
-            if let itemModel {
-                if !didInitializeItem {
-                    didInitializeItem = true
-                    amount = itemModel.amount
-                    date = itemModel.date
-                    category = itemModel.category
-                    details = itemModel.details
+            .onAppear() {
+                if let itemModel {
+                    if !didInitializeItem {
+                        didInitializeItem = true
+                        amount = itemModel.amount
+                        date = itemModel.date
+                        category = itemModel.category
+                        details = itemModel.details
+                    }
                 }
             }
-        }
-        .toolbar() {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(role: .destructive) {
-                    showDeleteDialog.toggle()
-                } label: {
-                    Image(systemName: "trash")
-                        .foregroundStyle(.red)
+            .toolbar() {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(role: .destructive) {
+                        showDeleteDialog.toggle()
+                    } label: {
+                        Image(systemName: "trash")
+                            .foregroundStyle(.red)
+                    }
                 }
             }
-        }
-        .confirmationDialog(
-            "Are you sure you want to delete this?",
-            isPresented: $showDeleteDialog,
-            titleVisibility: .visible
-        ) {
-            Button("Delete", role: .destructive) {
-                deleteExpenseItem()
+            .confirmationDialog(
+                "Are you sure you want to delete this?",
+                isPresented: $showDeleteDialog,
+                titleVisibility: .visible
+            ) {
+                Button("Delete", role: .destructive) {
+                    deleteExpenseItem()
+                }
+                Button("Cancel", role: .cancel) {}
             }
-            Button("Cancel", role: .cancel) {}
+            .navigationTitle("Edit Expense")
+            .navigationBarTitleDisplayMode(.large)
         }
+
     }
     
     func save() {
