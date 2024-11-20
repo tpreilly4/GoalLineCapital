@@ -22,7 +22,7 @@ struct ExpenseTrackerView: View {
         }
                 
         NavigationStack {
-            AddEditExpenseView(itemModel: nil)
+            AddExpenseView()
             
             List{
                 ForEach(groupedExpenses.keys.sorted{ return monthYearSorter(this: $0, that: $1) }, id: \.self) { month in

@@ -14,7 +14,7 @@ struct ExpenseDetailsView: View {
     var body: some View {
         NavigationStack{
             VStack{
-                AddEditExpenseView(itemModel: item)
+                EditExpenseView(itemModel: item)
             }
         }
     }
