@@ -11,9 +11,7 @@ import SwiftData
 struct ExpenseTrackerView: View {
     @Environment(\.modelContext) var modelContext
     @Query(sort: \ExpenseItem.date, order:.reverse) var allExpenses: [ExpenseItem]
-    
-    @State private var showingDetails = false
-    
+        
     private var Settings = ["Categories"]
         
     var body: some View {

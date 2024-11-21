@@ -12,7 +12,6 @@ struct InputExpenseItemView: View {
     @Query var categories: [ExpenseCategory]
         
     @State private var showingNewCategoryAlert = false
-    
 
     @Binding var expenseAmountString: String
     @Binding var date: Date
@@ -51,6 +50,9 @@ struct InputExpenseItemView: View {
                     Button("Add New") { showingNewCategoryAlert.toggle() }
                 }
                 .pickerStyle(.navigationLink)
+                .alert("New Category", isPresented: $showingNewCategoryAlert) {
+                    AddCategoryView()
+                }
             }
             .cardViewWrapper()
             .onChange(of: isAmountFocused) {
@@ -58,9 +60,6 @@ struct InputExpenseItemView: View {
             }
         }
         .padding([.horizontal,.top])
-        .alert("New Category", isPresented: $showingNewCategoryAlert) {
-            AddCategoryView()
-        }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
                 HStack {
@@ -78,7 +77,6 @@ struct InputExpenseItemView: View {
                     .fontWeight(.bold)
                 }
             }
-            
         }
     }
     

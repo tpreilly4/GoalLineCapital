@@ -13,10 +13,7 @@ struct AddExpenseView: View {
     @Environment(\.dismiss) var dismiss
     
     @Query var categories: [ExpenseCategory]
-        
-    @State private var newCategoryText = ""
-    @State private var showDeleteDialog = false
-    
+            
     @State private var amountString = ""
     var amount: Double {
         amountString.toDoubleAmount
