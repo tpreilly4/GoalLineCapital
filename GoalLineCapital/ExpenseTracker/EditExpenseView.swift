@@ -17,17 +17,21 @@ struct EditExpenseView: View {
     @State private var showDeleteDialog = false
     
     let itemModel : ExpenseItem?
-    @State private var amount: Double = 0.0
     @State private var date = Date()
     @State private var category: ExpenseCategory?
     @State private var details = ""
     @State private var didInitializeItem = false
     @State private var isInputValid: Bool = false
+    
+    @State private var amountString = ""
+    var amount: Double {
+        amountString.toDoubleAmount
+    }
         
     var body: some View {
         NavigationStack{
             VStack{
-//                InputExpenseItemView(amount: $amount, date: $date, category: $category, details: $details)
+                InputExpenseItemView(expenseAmountString: $amountString, date: $date, category: $category, details: $details)
                 
                 Button("Save", systemImage: "square.and.arrow.down.fill") {
                     save()
@@ -41,7 +45,8 @@ struct EditExpenseView: View {
                 if let itemModel {
                     if !didInitializeItem {
                         didInitializeItem = true
-                        amount = itemModel.amount
+                        let itemAmountString = String(itemModel.amount)
+                        amountString = formatDollarAmount(amount: itemAmountString, includeCents: true) ?? itemAmountString
                         date = itemModel.date
                         category = itemModel.category
                         details = itemModel.details
@@ -87,7 +92,7 @@ struct EditExpenseView: View {
     }
     
     func resetInputs(){
-        amount = 0.0
+        amountString = ""
         details = ""
         category = nil
     }
