@@ -17,14 +17,18 @@ struct AddExpenseView: View {
     @State private var newCategoryText = ""
     @State private var showDeleteDialog = false
     
-    @State private var amount: Double = 0.0
+    @State private var amountString = ""
+    var amount: Double {
+        amountString.toDoubleAmount
+    }
+    
     @State private var date = Date()
     @State private var category: ExpenseCategory?
     @State private var details = ""
         
     var body: some View {
         VStack{
-            InputExpenseItemView(amount: $amount, date: $date, category: $category, details: $details)
+            InputExpenseItemView(expenseAmountString: $amountString, date: $date, category: $category, details: $details)
             
             Button("Add", systemImage: "plus.circle.fill") {
                 addExpense()
@@ -41,7 +45,7 @@ struct AddExpenseView: View {
     }
     
     func resetInputs(){
-        amount = 0.0
+        amountString = ""
         details = ""
         category = nil
     }

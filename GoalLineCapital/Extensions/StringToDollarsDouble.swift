@@ -24,3 +24,21 @@ extension String {
         }
     }
 }
+
+func formatDollarAmount(amount: String, includeCents: Bool) -> String? {
+    // Try to convert the string to a Double
+    if let doubleValue = Double(amount) {
+        // Format the double value to always have 2 decimal places
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = includeCents ? 2 : 0
+        formatter.maximumFractionDigits = includeCents ? 2 : 0
+        formatter.usesGroupingSeparator = !includeCents
+        
+        // Return the formatted string
+        return formatter.string(from: NSNumber(value: doubleValue))
+    } else {
+        // Return nil if the input string couldn't be converted to a Double
+        return nil
+    }
+}

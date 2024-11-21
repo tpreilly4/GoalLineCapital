@@ -20,17 +20,7 @@ struct DollarAmountTextField: View {
             HStack{
                 Text("$")
                 TextField(placeholderText, text: $amount)
-                    .onChange(of: amount) { oldValue, newValue in
-                        let regex = #"^\d*\.?\d{0,2}$"#
-
-                        if let _ = newValue.range(of: regex, options: .regularExpression) {
-                            print("Valid string for currency")
-                        } else {
-                            amount = oldValue
-                        }
-                    }
-                    .keyboardType(.decimalPad)
-                    .submitLabel(.done)
+                    .easyDollarInput(with: $amount)
                     .focused($amountIsFocused)
                 if !amount.isEmpty {
                     Button {
@@ -46,7 +36,7 @@ struct DollarAmountTextField: View {
             .font(.title)
             .padding(5)
             .onChange(of: amountIsFocused) {
-                self.amount = formatDollarAmount(amount) ?? amount
+                self.amount = formatDollarAmount(amount: amount, includeCents: includeCents) ?? amount
             }
         }
         .toolbar {
@@ -61,25 +51,6 @@ struct DollarAmountTextField: View {
                     }
                 }
             }
-            
-        }
-    }
-    
-    func formatDollarAmount(_ amount: String) -> String? {
-        // Try to convert the string to a Double
-        if let doubleValue = Double(amount) {
-            // Format the double value to always have 2 decimal places
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.minimumFractionDigits = includeCents ? 2 : 0
-            formatter.maximumFractionDigits = includeCents ? 2 : 0
-            formatter.usesGroupingSeparator = !includeCents
-            
-            // Return the formatted string
-            return formatter.string(from: NSNumber(value: doubleValue))
-        } else {
-            // Return nil if the input string couldn't be converted to a Double
-            return nil
         }
     }
 }

@@ -27,7 +27,7 @@ struct EditExpenseView: View {
     var body: some View {
         NavigationStack{
             VStack{
-                InputExpenseItemView(amount: $amount, date: $date, category: $category, details: $details)
+//                InputExpenseItemView(amount: $amount, date: $date, category: $category, details: $details)
                 
                 Button("Save", systemImage: "square.and.arrow.down.fill") {
                     save()
