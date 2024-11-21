@@ -10,7 +10,7 @@ import SwiftData
 
 struct CategoryListView: View {
     @Environment(\.modelContext) var modelContext
-    @Query var categories: [ExpenseCategory]
+    @Query(sort: \ExpenseCategory.name) var categories: [ExpenseCategory]
     
     @State private var showingAddCategoryAlert = false
     

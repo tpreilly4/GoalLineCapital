@@ -12,13 +12,10 @@ struct AddExpenseView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
     
-    @Query var categories: [ExpenseCategory]
-            
     @State private var amountString = ""
     var amount: Double {
         amountString.toDoubleAmount
-    }
-    
+    }    
     @State private var date = Date()
     @State private var category: ExpenseCategory?
     @State private var details = ""

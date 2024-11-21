@@ -44,10 +44,12 @@ struct DollarAmountTextField: View {
                 ToolbarItemGroup(placement: .keyboard) {
                     HStack {
                         Spacer()
-                        Button("Done") {
+                        Button {
                             amountIsFocused = false
+                        } label: {
+                            Image(systemName: "keyboard.chevron.compact.down")
+                                .foregroundStyle(.tint)
                         }
-                        .fontWeight(.bold)
                     }
                 }
             }

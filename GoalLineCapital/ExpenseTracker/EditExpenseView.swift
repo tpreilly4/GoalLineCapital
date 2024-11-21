@@ -11,18 +11,14 @@ import SwiftData
 struct EditExpenseView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) var dismiss
-    
-    @Query var categories: [ExpenseCategory]
-        
-    @State private var showDeleteDialog = false
-    
+                
     let itemModel : ExpenseItem?
     @State private var date = Date()
     @State private var category: ExpenseCategory?
     @State private var details = ""
     @State private var didInitializeItem = false
     @State private var isInputValid: Bool = false
-    
+    @State private var showDeleteDialog = false
     @State private var amountString = ""
     var amount: Double {
         amountString.toDoubleAmount

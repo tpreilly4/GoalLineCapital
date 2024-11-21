@@ -11,7 +11,6 @@ import SwiftData
 struct MonthView: View {
     @Environment(\.modelContext) var modelContext
     @Query var monthExpenses: [ExpenseItem]
-    @Query var allCategories: [ExpenseCategory]
     @State private var isGrouped = true
         
     private var month: String
