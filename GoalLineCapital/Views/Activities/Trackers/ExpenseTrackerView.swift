@@ -25,7 +25,7 @@ struct ExpenseTrackerView: View {
             List{
                 ForEach(groupedExpenses.keys.sorted{ return monthYearSorter(this: $0, that: $1) }, id: \.self) { month in
                     Section() {
-                        ForEach(groupedExpenses[month]!.prefix(3), id: \.id) { item in
+                        ForEach(groupedExpenses[month]!.prefix(5), id: \.id) { item in
                             NavigationLink {
                                 ExpenseDetailsView(item: item)
                             } label: {

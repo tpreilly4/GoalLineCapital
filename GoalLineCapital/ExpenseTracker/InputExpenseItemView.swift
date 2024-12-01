@@ -87,6 +87,7 @@ struct InputExpenseItemView: View {
                     }
                     Spacer()
                     Button {
+                        // hide keyboard
                         isDetailsFocused = false
                         isAmountFocused = false
                     } label: {
