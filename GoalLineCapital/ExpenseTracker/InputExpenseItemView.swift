@@ -50,7 +50,7 @@ struct InputExpenseItemView: View {
                     .keyboardType(.decimalPad)
                     .focused($isAmountFocused)
                     .easyDollarInput(with: $expenseAmountString)
-                    .frame(maxWidth: 140)
+                    .frame(minWidth: 140)
                 
                 Picker("", selection: $category){
                     if category == nil {
