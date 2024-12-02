@@ -67,7 +67,15 @@ struct MortgagePaymentCalculatorView: View {
                 
                 Section("Down Payment") {
                     DollarAmountTextField(amount: $downPaymentAmountString, placeholderText: "Enter down payment", includeCents: false)
-                    
+                    HStack {
+                        Button("5%") { autofillDownPayment(percentage: 0.05) }.layoutPriority(1).buttonStyle(.borderless)
+                        Spacer()
+                        Button("10%") { autofillDownPayment(percentage: 0.10) }.layoutPriority(1).buttonStyle(.borderless)
+                        Spacer()
+                        Button("15%") { autofillDownPayment(percentage: 0.15) }.layoutPriority(1).buttonStyle(.borderless)
+                        Spacer()
+                        Button("20%") { autofillDownPayment(percentage: 0.2) }.layoutPriority(1).buttonStyle(.borderless)
+                    }.disabled(homePriceString.isEmpty)
                 }
                 
                 Section ("Interest rate") {
@@ -169,6 +177,10 @@ struct MortgagePaymentCalculatorView: View {
         }
         
         return payment
+    }
+    
+    private func autofillDownPayment(percentage: Double) {
+        downPaymentAmountString = String(Int(homePrice * percentage))
     }
 }
 

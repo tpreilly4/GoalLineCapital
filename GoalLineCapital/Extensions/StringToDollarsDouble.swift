@@ -16,7 +16,10 @@ extension String {
             return 0.0
         }
         
-        if let decimalAmount = Double(self) {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        
+        if let decimalAmount = formatter.number(from: self)?.doubleValue {
             return decimalAmount
         } else {
             print("Error converting string to Double")
@@ -30,10 +33,10 @@ func formatDollarAmount(amount: String, includeCents: Bool) -> String? {
     if let doubleValue = Double(amount) {
         // Format the double value to always have 2 decimal places
         let formatter = NumberFormatter()
+        
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = includeCents ? 2 : 0
         formatter.maximumFractionDigits = includeCents ? 2 : 0
-        formatter.usesGroupingSeparator = !includeCents
         
         // Return the formatted string
         return formatter.string(from: NSNumber(value: doubleValue))
