@@ -63,7 +63,16 @@ struct InputExpenseItemView: View {
                             .tag(cat as ExpenseCategory?)
                             .foregroundStyle(.primary)
                     }
-                    Button("Add New") { showingNewCategoryAlert.toggle() }
+                    // Lets the whole row be tappable
+                    HStack {
+                            Text("Add New")
+                            .foregroundStyle(.tint)
+                            Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        showingNewCategoryAlert.toggle()
+                    }
                 }
                 .pickerStyle(.navigationLink)
                 .alert("New Category", isPresented: $showingNewCategoryAlert) {

@@ -14,8 +14,7 @@ struct ExpenseListItemView: View {
     
     var body: some View {
         HStack{
-            Text(date, format: .dateTime.day().month())
-            Spacer()
+            Text("\(date.formatted(.dateTime.day().month())),")
             Text(details)
             Spacer()
             Text(amount, format: .currency(code: "USD"))
