@@ -35,6 +35,7 @@ struct CompoundInterestCalculatorView: View {
                 Section("Current Balance") {
                     DollarAmountTextField(amount: $initialBalanceString, placeholderText: "Enter current balance", includeCents: false)
                 }
+                
                 Section("Contributions") {
                     VStack{
                         DollarAmountTextField(amount: $contributionAmountString, placeholderText: "Enter contributions", includeCents: false)
@@ -46,19 +47,11 @@ struct CompoundInterestCalculatorView: View {
                         .pickerStyle(.segmented)
                     }
                 }
-                Section("Interest Rate"){
+                
+                Section("Estimated Interest Rate"){
                     PercentSlider(value: $interestRate, range: 0...0.25, step:0.005)
-                    
-                    HStack{
-                        Text("Compounds:")
-                        Picker("", selection: $compoundingRate) {
-                            ForEach([TimeRangeUnit.daily, TimeRangeUnit.monthly, TimeRangeUnit.yearly], id: \.self) {
-                                Text("\($0)")
-                            }
-                        }
-                        .pickerStyle(.segmented)
-                    }
                 }
+                
                 Section("Compounds For") {
                     HStack {
                         Slider(value: $numberOfYears, in: 0...80, step:1)

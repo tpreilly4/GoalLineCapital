@@ -11,6 +11,8 @@ struct PercentSlider: View {
     @Binding var value: Double
     var range: ClosedRange<Double>
     var step: Double
+    @FocusState private var percentIsFocused: Bool
+
     
     var body: some View {
         HStack{
@@ -22,6 +24,23 @@ struct PercentSlider: View {
                 .fontWeight(.bold)
                 .multilineTextAlignment(.trailing)
                 .keyboardType(.decimalPad)
+                .focused($percentIsFocused)
+                .toolbar {
+                    if percentIsFocused {
+                        ToolbarItemGroup(placement: .keyboard) {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    percentIsFocused = false
+                                } label: {
+                                    Image(systemName: "keyboard.chevron.compact.down")
+                                        .foregroundStyle(.tint)
+                                }
+                            }
+                        }
+                    }
+                }
+
         }
     }
 }

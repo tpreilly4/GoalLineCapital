@@ -32,9 +32,6 @@ struct DollarAmountTextField: View {
                     }
                 }
             }
-            .fontWeight(.bold)
-            .font(.title)
-            .padding(5)
             .onChange(of: amountIsFocused) {
                 self.amount = formatDollarAmount(amount: amount, includeCents: includeCents) ?? amount
             }
