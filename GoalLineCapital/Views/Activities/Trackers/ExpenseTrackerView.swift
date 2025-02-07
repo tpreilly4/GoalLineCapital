@@ -13,6 +13,8 @@ struct ExpenseTrackerView: View {
     @Query(sort: \ExpenseItem.date, order:.reverse) var allExpenses: [ExpenseItem]
         
     private var Settings = ["Categories"]
+    
+    private var CurrentMonth = Date().monthAndYear
         
     var body: some View {
         let groupedExpenses = Dictionary(grouping: allExpenses) {
@@ -25,7 +27,7 @@ struct ExpenseTrackerView: View {
             List{
                 ForEach(groupedExpenses.keys.sorted{ return monthYearSorter(this: $0, that: $1) }, id: \.self) { month in
                     Section() {
-                        ForEach(groupedExpenses[month]!.prefix(5), id: \.id) { item in
+                        ForEach(groupedExpenses[month]!.prefix(month == CurrentMonth ? 20 : 5), id: \.id) { item in
                             NavigationLink {
                                 ExpenseDetailsView(item: item)
                             } label: {

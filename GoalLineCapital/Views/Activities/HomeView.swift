@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.openURL) var openURL
+    @Environment(\.colorScheme) var colorScheme
 
     @State private var showingTipCalculatorView = false
     @State private var showingExpenseSplitterView = false
@@ -31,9 +32,8 @@ struct HomeView: View {
                 HStack {
                     Spacer()
                     Text("Guiding You to Your").font(.headline).italic()
-                    Text("Financial Goal Line").font(.headline).italic().foregroundStyle(.goalLineBlue)
+                    Text("Financial Goal Line").font(.headline).italic().foregroundStyle(colorScheme == .dark ? Color.white : .goalLineBlue)
                     Spacer()
-                        
                 }.padding(.vertical)
                 
                 List{

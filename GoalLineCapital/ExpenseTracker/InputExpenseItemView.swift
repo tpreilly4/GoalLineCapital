@@ -50,13 +50,14 @@ struct InputExpenseItemView: View {
                     .keyboardType(.decimalPad)
                     .focused($isAmountFocused)
                     .easyDollarInput(with: $expenseAmountString)
-                    .frame(minWidth: 140)
                 
                 Picker("", selection: $category){
                     if category == nil {
                         Text("Choose a Category")
                             .tag(nil as ExpenseCategory?)
                             .foregroundStyle(.gray)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
                     }
                     ForEach(categories) { cat in
                         Text(cat.name)
@@ -78,6 +79,7 @@ struct InputExpenseItemView: View {
                 .alert("New Category", isPresented: $showingNewCategoryAlert) {
                     AddCategoryView()
                 }
+                .fixedSize()
             }
             .cardViewWrapper()
             .onChange(of: isAmountFocused) {

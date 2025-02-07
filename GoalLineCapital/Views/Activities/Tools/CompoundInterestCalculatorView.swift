@@ -22,7 +22,7 @@ struct CompoundInterestCalculatorView: View {
         contributionAmountString.toDoubleAmount
     }
     
-    @State private var interestRate = 0.07
+    @State private var interestRate = 0.1
     @State private var numberOfYears = 10.0
     @State private var compoundingRate = TimeRangeUnit.monthly
     @State private var contributionRate = TimeRangeUnit.monthly
@@ -48,17 +48,27 @@ struct CompoundInterestCalculatorView: View {
                     }
                 }
                 
-                Section("Estimated Interest Rate"){
+                Section {
                     PercentSlider(value: $interestRate, range: 0...0.25, step:0.005)
+                } header: {
+                    Text("Estimated Interest Rate")
+                } footer: {
+                    Text("The average return of the S&P 500 over the last 30 years is roughly 10%")
+                        .italic()
                 }
                 
-                Section("Compounds For") {
+                Section {
                     HStack {
                         Slider(value: $numberOfYears, in: 0...80, step:1)
                             .frame(maxWidth: 250)
                         Spacer()
                         Text("\(String(Int(numberOfYears))) years")
                     }
+                } header: {
+                    Text("Compounds For")
+                } footer: {
+                    Text("Calculator assumes monthly compounding periods")
+                        .italic()
                 }
 
                 Section(){
