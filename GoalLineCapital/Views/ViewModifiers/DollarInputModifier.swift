@@ -15,13 +15,35 @@ struct DollarInputModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onChange(of: amount) { oldValue, newValue in
-                let regex = #"^\d{1,3}(,\d{3})*(\.\d{0,2})?$|^\d*\.?\d{0,2}$"#
-
-                if let _ = newValue.range(of: regex, options: .regularExpression) {
-                    print("Valid string for currency")
-                } else {
+                // More permissive validation during editing
+                // Allow partial states that occur during backspace/editing
+                let allowedChars = CharacterSet(charactersIn: "0123456789.,")
+                let inputChars = CharacterSet(charactersIn: newValue)
+                
+                // Basic validation: only allow digits, commas, and decimal points
+                if !allowedChars.isSuperset(of: inputChars) {
                     amount = oldValue
+                    return
                 }
+                
+                // Prevent multiple decimal points
+                let decimalCount = newValue.filter { $0 == "." }.count
+                if decimalCount > 1 {
+                    amount = oldValue
+                    return
+                }
+                
+                // Prevent more than 2 digits after decimal
+                if let decimalIndex = newValue.lastIndex(of: ".") {
+                    let afterDecimal = String(newValue[newValue.index(after: decimalIndex)...])
+                    if afterDecimal.count > 2 {
+                        amount = oldValue
+                        return
+                    }
+                }
+                
+                // Allow the change - we'll validate properly formatted state on focus loss
+                print("Allowing intermediate input: \(newValue)")
             }
             .keyboardType(.decimalPad)
             .submitLabel(.done)

@@ -30,8 +30,11 @@ extension String {
 }
 
 func formatDollarAmount(amount: String, includeCents: Bool) -> String? {
+    // Remove any existing commas from the input first
+    let cleanAmount = amount.replacingOccurrences(of: ",", with: "")
+    
     // Try to convert the string to a Double
-    if let doubleValue = Double(amount) {
+    if let doubleValue = Double(cleanAmount) {
         // Format the double value to always have 2 decimal places
         let formatter = NumberFormatter()
         

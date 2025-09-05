@@ -33,7 +33,11 @@ struct DollarAmountTextField: View {
                 }
             }
             .onChange(of: amountIsFocused) {
-                self.amount = formatDollarAmount(amount: amount, includeCents: includeCents) ?? amount
+                if !amountIsFocused {
+                    // Clean up the input when focus is lost
+                    let cleanedAmount = amount.replacingOccurrences(of: ",", with: "")
+                    self.amount = formatDollarAmount(amount: cleanedAmount, includeCents: includeCents) ?? amount
+                }
             }
         }
         .toolbar {
