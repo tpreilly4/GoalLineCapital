@@ -15,7 +15,7 @@ struct DollarInputModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onChange(of: amount) { oldValue, newValue in
-                let regex = #"^\d*\.?\d{0,2}$"#
+                let regex = #"^\d{1,3}(,\d{3})*(\.\d{0,2})?$|^\d*\.?\d{0,2}$"#
 
                 if let _ = newValue.range(of: regex, options: .regularExpression) {
                     print("Valid string for currency")

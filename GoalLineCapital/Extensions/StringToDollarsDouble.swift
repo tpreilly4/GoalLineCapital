@@ -18,6 +18,7 @@ extension String {
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = true
         
         if let decimalAmount = formatter.number(from: self)?.doubleValue {
             return decimalAmount
@@ -35,6 +36,7 @@ func formatDollarAmount(amount: String, includeCents: Bool) -> String? {
         let formatter = NumberFormatter()
         
         formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = true
         formatter.minimumFractionDigits = includeCents ? 2 : 0
         formatter.maximumFractionDigits = includeCents ? 2 : 0
         
