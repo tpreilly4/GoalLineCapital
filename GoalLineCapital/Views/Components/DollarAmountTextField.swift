@@ -34,11 +34,8 @@ struct DollarAmountTextField: View {
             }
             .onChange(of: amountIsFocused) {
                 if !amountIsFocused {
-                    // Apply final formatting when focus is lost
-                    // This ensures any pending comma formatting is applied
+                    // Apply final formatting when focus is lost (mainly for decimal places)
                     let cleanedAmount = amount.replacingOccurrences(of: ",", with: "")
-                    
-                    // Apply final dollar formatting (includes comma formatting)
                     if let formattedAmount = formatDollarAmount(amount: cleanedAmount, includeCents: includeCents) {
                         self.amount = formattedAmount
                     }

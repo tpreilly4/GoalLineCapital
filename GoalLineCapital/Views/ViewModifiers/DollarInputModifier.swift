@@ -15,51 +15,16 @@ struct DollarInputModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onChange(of: amount) { oldValue, newValue in
-                // Format input in real-time with commas while being smart about cursor preservation
+                // Format input in real-time with commas
                 let formattedValue = formatInputWithCommas(newValue, oldValue: oldValue)
                 
-                // Only update if formatting is needed and safe
-                if formattedValue != newValue && shouldApplyFormatting(oldValue: oldValue, newValue: newValue, formattedValue: formattedValue) {
-                    DispatchQueue.main.async {
-                        amount = formattedValue
-                    }
+                // Only update if the formatted value is different to avoid infinite loops
+                if formattedValue != newValue {
+                    amount = formattedValue
                 }
             }
             .keyboardType(.decimalPad)
             .submitLabel(.done)
-    }
-    
-    private func shouldApplyFormatting(oldValue: String, newValue: String, formattedValue: String) -> Bool {
-        // Extract just the numeric content for comparison
-        let oldDigits = oldValue.filter { $0.isNumber }
-        let newDigits = newValue.filter { $0.isNumber }
-        
-        // Always allow formatting when adding digits
-        if newDigits.count >= oldDigits.count {
-            return true
-        }
-        
-        // For deletions, be very conservative
-        // Only apply formatting if we're sure it won't disrupt cursor position
-        
-        // Case 1: Check if deletion happened at the end (safest)
-        let oldClean = oldValue.replacingOccurrences(of: ",", with: "")
-        let newClean = newValue.replacingOccurrences(of: ",", with: "")
-        
-        if oldClean.hasPrefix(newClean) {
-            // Deletion from the end - safe to format
-            return true
-        }
-        
-        // Case 2: Check if the user is trying to delete a comma
-        // If the input appears to be removing only commas, we should reformat
-        if oldValue.replacingOccurrences(of: ",", with: "") == newValue.replacingOccurrences(of: ",", with: "") {
-            return true
-        }
-        
-        // Case 3: For any other deletion (likely from middle), don't reformat immediately
-        // This preserves cursor position for middle editing
-        return false
     }
     
     private func formatInputWithCommas(_ input: String, oldValue: String) -> String {
@@ -88,23 +53,6 @@ struct DollarInputModifier: ViewModifier {
             }
         }
         
-        // Check if this is a deletion operation by comparing digit counts
-        let oldDigits = oldValue.filter { $0.isNumber }
-        let newDigits = digitsAndDecimal.filter { $0.isNumber }
-        let isDeletion = newDigits.count < oldDigits.count
-        
-        // For deletions, be more conservative to preserve cursor position
-        if isDeletion {
-            // Only reformat if the result would be significantly different
-            // This helps maintain cursor position during backspace operations
-            let currentFormatted = addCommasToDigits(digitsAndDecimal)
-            
-            // If the input already has the right format, return it as-is
-            if input == currentFormatted {
-                return input
-            }
-        }
-        
         // Split on decimal point
         let components = digitsAndDecimal.components(separatedBy: ".")
         let integerPart = components[0]
@@ -117,22 +65,6 @@ struct DollarInputModifier: ViewModifier {
         if let decimal = decimalPart {
             return "\(formattedInteger).\(decimal)"
         } else if digitsAndDecimal.hasSuffix(".") {
-            return "\(formattedInteger)."
-        } else {
-            return formattedInteger
-        }
-    }
-    
-    private func addCommasToDigits(_ input: String) -> String {
-        let components = input.components(separatedBy: ".")
-        let integerPart = components[0]
-        let decimalPart = components.count > 1 ? components[1] : nil
-        
-        let formattedInteger = addCommasToInteger(integerPart)
-        
-        if let decimal = decimalPart {
-            return "\(formattedInteger).\(decimal)"
-        } else if input.hasSuffix(".") {
             return "\(formattedInteger)."
         } else {
             return formattedInteger
