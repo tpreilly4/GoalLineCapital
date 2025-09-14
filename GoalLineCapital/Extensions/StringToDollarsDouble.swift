@@ -18,6 +18,7 @@ extension String {
         
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = true
         
         if let decimalAmount = formatter.number(from: self)?.doubleValue {
             return decimalAmount
@@ -29,12 +30,16 @@ extension String {
 }
 
 func formatDollarAmount(amount: String, includeCents: Bool) -> String? {
+    // Remove any existing commas from the input first
+    let cleanAmount = amount.replacingOccurrences(of: ",", with: "")
+    
     // Try to convert the string to a Double
-    if let doubleValue = Double(amount) {
+    if let doubleValue = Double(cleanAmount) {
         // Format the double value to always have 2 decimal places
         let formatter = NumberFormatter()
         
         formatter.numberStyle = .decimal
+        formatter.usesGroupingSeparator = true
         formatter.minimumFractionDigits = includeCents ? 2 : 0
         formatter.maximumFractionDigits = includeCents ? 2 : 0
         

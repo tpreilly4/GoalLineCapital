@@ -33,7 +33,13 @@ struct DollarAmountTextField: View {
                 }
             }
             .onChange(of: amountIsFocused) {
-                self.amount = formatDollarAmount(amount: amount, includeCents: includeCents) ?? amount
+                if !amountIsFocused {
+                    // Apply final formatting when focus is lost (mainly for decimal places)
+                    let cleanedAmount = amount.replacingOccurrences(of: ",", with: "")
+                    if let formattedAmount = formatDollarAmount(amount: cleanedAmount, includeCents: includeCents) {
+                        self.amount = formattedAmount
+                    }
+                }
             }
         }
         .toolbar {
