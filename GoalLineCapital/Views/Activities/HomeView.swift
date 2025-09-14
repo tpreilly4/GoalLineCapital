@@ -80,20 +80,25 @@ struct HomeView: View {
                         Button {
                             if let phoneURL = URL(string: "tel://9089386361") { openURL(phoneURL) }
                         } label : {
-                            Label("Call us", emoji: "📞")
+                            Label("Give us a call", emoji: "📞")
                         }
                         Button {
                             if let emailURL = URL(string: "mailto:info@GoalLineCapital.com") { openURL(emailURL) }
                         } label : {
-                            Label("Email us", emoji: "✉️")
+                            Label("Send us an email", emoji: "✉️")
                         }
                         Button {
-                            let address = "161 Madison Ave, Ste 230, Morristown, NJ 07960"
+                            let address = "12 Quimby Lane Bernardsville NJ 07924"
                                             if let mapsURL = URL(string: "http://maps.apple.com/?q=\(address.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")") {
                                                 openURL(mapsURL)
                                             }
                         } label : {
-                            Label("Find us", emoji: "📍")
+                            Label("Come to the office", emoji: "📍")
+                        }
+                        Button {
+                            if let websiteUrl = URL(string: "https://www.goallinecapital.com") { openURL(websiteUrl) }
+                        } label : {
+                            Label("Visit our website", emoji: "🔗")
                         }
                     }
                     ListEndBrandingView()
