@@ -25,7 +25,6 @@ struct InputExpenseItemView: View {
     
     var body: some View {
         VStack{
-            
             HStack{
                 TextField("What did you buy?", text: $details)
                     .focused($isDetailsFocused)
@@ -51,35 +50,24 @@ struct InputExpenseItemView: View {
                     .focused($isAmountFocused)
                     .easyDollarInput(with: $expenseAmountString)
                 
-                Picker("", selection: $category){
-                    if category == nil {
-                        Text("Choose a Category")
-                            .tag(nil as ExpenseCategory?)
-                            .foregroundStyle(.gray)
-                            .lineLimit(1)
-                            .truncationMode(.tail)
-                    }
+                // Category picker
+                Menu {
                     ForEach(categories) { cat in
-                        Text(cat.name)
-                            .tag(cat as ExpenseCategory?)
-                            .foregroundStyle(.primary)
+                        Button(cat.name) { category = cat }
                     }
-                    // Lets the whole row be tappable
-                    HStack {
-                            Text("Add New")
-                            .foregroundStyle(.tint)
-                            Spacer()
+                    Divider()
+                    Button(role: .none) {
+                        showingNewCategoryAlert = true
+                    } label: {
+                        Label("Add New", systemImage: "plus")
                     }
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        showingNewCategoryAlert.toggle()
-                    }
+                } label: {
+                    Text(category?.name ?? "Choose a Category")
                 }
-                .pickerStyle(.navigationLink)
+                .id(category?.id)
                 .alert("New Category", isPresented: $showingNewCategoryAlert) {
                     AddCategoryView()
                 }
-                .fixedSize()
             }
             .cardViewWrapper()
             .onChange(of: isAmountFocused) {
@@ -106,6 +94,17 @@ struct InputExpenseItemView: View {
                             .foregroundStyle(.tint)
                     }
                 }
+            }
+        }
+        .alert("New Category", isPresented: $showingNewCategoryAlert) {
+            AddCategoryView()
+        }
+        // New categories are selected automatically
+        .onChange(of: categories) { oldCategories, newCategories in
+            if let newCategory = newCategories.first(where: { cat in
+                !oldCategories.contains(where: { $0.id == cat.id })
+            }) {
+                category = newCategory
             }
         }
     }
