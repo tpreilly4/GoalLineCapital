@@ -40,8 +40,8 @@ struct CompoundInterestCalculatorView: View {
                     VStack{
                         DollarAmountTextField(amount: $contributionAmountString, placeholderText: "Enter contributions", includeCents: false)
                         Picker("Rate", selection: $contributionRate) {
-                            ForEach([TimeRangeUnit.daily, TimeRangeUnit.weekly, TimeRangeUnit.monthly, TimeRangeUnit.yearly], id: \.self) {
-                                Text("\($0)")
+                            ForEach([TimeRangeUnit.daily, TimeRangeUnit.weekly, TimeRangeUnit.monthly, TimeRangeUnit.yearly], id: \.self) { unit in
+                                Text(verbatim: unit.description)
                             }
                         }
                         .pickerStyle(.segmented)

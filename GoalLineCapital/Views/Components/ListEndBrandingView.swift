@@ -19,7 +19,7 @@ struct ListEndBrandingView: View {
             .padding(.vertical)
             HStack{
                 Spacer()
-                Text("Copyright 2024. Goal Line Capital.")
+                Text("Copyright 2026. Goal Line Capital.")
                     .font(.system(size: 12))
                 Spacer()
             }

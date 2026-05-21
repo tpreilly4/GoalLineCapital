@@ -101,8 +101,8 @@ struct MortgagePaymentCalculatorView: View {
                     Section("Property Tax") {
                         DollarAmountTextField(amount: $propertyTaxString, placeholderText: "Enter property tax", includeCents: false)
                         Picker("Term", selection: $propertyTaxTerm) {
-                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) {
-                                Text("\($0)")
+                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) { unit in
+                                Text(verbatim: unit.description)
                             }
                         }
                         .pickerStyle(.segmented)
@@ -111,8 +111,8 @@ struct MortgagePaymentCalculatorView: View {
                     Section("Home Insurance") {
                         DollarAmountTextField(amount: $homeInsuranceString, placeholderText: "Enter home insurance", includeCents: false)
                         Picker("Term", selection: $homeInsuranceTerm) {
-                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) {
-                                Text("\($0)")
+                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) { unit in
+                                Text(verbatim: unit.description)
                             }
                         }
                         .pickerStyle(.segmented)
@@ -121,8 +121,8 @@ struct MortgagePaymentCalculatorView: View {
                     Section("PMI") {
                         DollarAmountTextField(amount: $pmiAmountString, placeholderText: "Enter PMI", includeCents: false)
                         Picker("Term", selection: $pmiTerm) {
-                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) {
-                                Text("\($0)")
+                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) { unit in
+                                Text(verbatim: unit.description)
                             }
                         }
                         .pickerStyle(.segmented)
@@ -131,8 +131,8 @@ struct MortgagePaymentCalculatorView: View {
                     Section("HOA Fees") {
                         DollarAmountTextField(amount: $hoaAmountString, placeholderText: "Enter HOA fees", includeCents: false)
                         Picker("Term", selection: $hoaFeesTerm) {
-                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) {
-                                Text("\($0)")
+                            ForEach([TimeRangeUnit.monthly, TimeRangeUnit.quarterly, TimeRangeUnit.yearly], id: \.self) { unit in
+                                Text(verbatim: unit.description)
                             }
                         }
                         .pickerStyle(.segmented)
