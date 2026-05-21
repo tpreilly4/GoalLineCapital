@@ -52,14 +52,14 @@ struct InputExpenseItemView: View {
                 
                 // Category picker
                 Menu {
-                    ForEach(categories) { cat in
-                        Button(cat.name) { category = cat }
-                    }
-                    Divider()
                     Button(role: .none) {
                         showingNewCategoryAlert = true
                     } label: {
                         Label("Add New", systemImage: "plus")
+                    }
+                    Divider()
+                    ForEach(categories) { cat in
+                        Button(cat.name) { category = cat }
                     }
                 } label: {
                     Text(category?.name ?? "Choose a Category")

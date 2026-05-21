@@ -29,12 +29,18 @@ struct HomeView: View {
                     .padding(.horizontal, 25)
                     .padding(.top, 50)
                     .background(Color.clear)
-                HStack {
-                    Spacer()
-                    Text("Guiding You to Your").font(.headline).italic()
-                    Text("Financial Goal Line").font(.headline).italic().foregroundStyle(colorScheme == .dark ? Color.white : .goalLineBlue)
-                    Spacer()
-                }.padding(.vertical)
+                (
+                    Text("Guiding You to Your ")
+                        .font(.headline)
+                        .italic()
+                    +
+                    Text("Financial Goal Line")
+                        .font(.headline)
+                        .italic()
+                        .foregroundStyle(colorScheme == .dark ? Color.white : .goalLineBlue)
+                )
+                .multilineTextAlignment(.center)
+                .padding(.vertical)
                 
                 List{
                     Section(header: Text("Tools")){
