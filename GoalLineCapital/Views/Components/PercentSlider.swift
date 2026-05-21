@@ -13,34 +13,46 @@ struct PercentSlider: View {
     var step: Double
     @FocusState private var percentIsFocused: Bool
 
-    
     var body: some View {
-        HStack{
-            Slider(value: $value, in: range, step: step)
-                .frame(maxWidth: 260)
-            Spacer()
-            TextField("Rate", value: $value, format: .percent)
-                .frame(minWidth: 0, maxWidth: 60)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.trailing)
-                .keyboardType(.decimalPad)
-                .focused($percentIsFocused)
-                .toolbar {
-                    if percentIsFocused {
-                        ToolbarItemGroup(placement: .keyboard) {
-                            HStack {
-                                Spacer()
-                                Button {
-                                    percentIsFocused = false
-                                } label: {
-                                    Image(systemName: "keyboard.chevron.compact.down")
-                                        .foregroundStyle(.tint)
-                                }
+        ViewThatFits(in: .horizontal) {
+            HStack {
+                slider
+                Spacer(minLength: 12)
+                percentField
+            }
+            VStack(alignment: .trailing, spacing: 8) {
+                percentField
+                slider
+            }
+        }
+    }
+
+    private var slider: some View {
+        Slider(value: $value, in: range, step: step)
+            .frame(maxWidth: 260)
+    }
+
+    private var percentField: some View {
+        TextField("Rate", value: $value, format: .percent)
+            .fixedSize()
+            .fontWeight(.bold)
+            .multilineTextAlignment(.trailing)
+            .keyboardType(.decimalPad)
+            .focused($percentIsFocused)
+            .toolbar {
+                if percentIsFocused {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        HStack {
+                            Spacer()
+                            Button {
+                                percentIsFocused = false
+                            } label: {
+                                Image(systemName: "keyboard.chevron.compact.down")
+                                    .foregroundStyle(.tint)
                             }
                         }
                     }
                 }
-
-        }
+            }
     }
 }

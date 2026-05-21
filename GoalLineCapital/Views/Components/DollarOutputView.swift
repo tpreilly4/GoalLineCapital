@@ -11,14 +11,30 @@ struct DollarOutputView: View {
     var title: String
     var value: Double
     var body: some View {
-        HStack{
-            Text(title)
-            Spacer()
-            Text(value, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                .fontWeight(.bold)
-                .font(.title)
+        ViewThatFits(in: .horizontal) {
+            HStack {
+                Text(title)
+                Spacer()
+                valueText
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
+            }
+            VStack(alignment: .leading) {
+                Text(title)
+                HStack {
+                    Spacer()
+                    valueText
+                        .multilineTextAlignment(.trailing)
+                }
+            }
         }
-        .padding([.vertical],5)
+        .padding([.vertical], 5)
+    }
+
+    private var valueText: Text {
+        Text(value, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+            .fontWeight(.bold)
+            .font(.title)
     }
 }
 
