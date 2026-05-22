@@ -11,9 +11,11 @@ import SwiftData
 struct ExpenseTrackerView: View {
     @Environment(\.modelContext) var modelContext
     @Query(sort: \ExpenseItem.date, order:.reverse) var allExpenses: [ExpenseItem]
-        
+
+    @State private var showExportSheet = false
+
     private var Settings = ["Categories"]
-    
+
     private var CurrentMonth = Date().monthAndYear
         
     var body: some View {
@@ -25,7 +27,7 @@ struct ExpenseTrackerView: View {
             AddExpenseView()
             
             List{
-                ForEach(groupedExpenses.keys.sorted{ return monthYearSorter(this: $0, that: $1) }, id: \.self) { month in
+                ForEach(groupedExpenses.keys.sorted { monthYearSorter($0, $1) }, id: \.self) { month in
                     Section() {
                         ForEach(groupedExpenses[month]!.prefix(month == CurrentMonth ? 20 : 5), id: \.id) { item in
                             NavigationLink {
@@ -66,29 +68,22 @@ struct ExpenseTrackerView: View {
                                 CategoryListView()
                             }
                         }
+                        Button("Export Report", systemImage: "square.and.arrow.up") {
+                            showExportSheet = true
+                        }
                     } label: {
                         Image(systemName: "ellipsis.circle")
                     }
                 }
+            }
+            .sheet(isPresented: $showExportSheet) {
+                ExportRangePickerView(allExpenses: allExpenses)
             }
             .scrollContentBackground(.hidden)
             .background(BrandingGradients().brandingGradient)
         }
     }
     
-    func monthYearSorter(this: String, that: String) -> Bool {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy" // "MMMM" for full month name, "yyyy" for 4-digit year
-        
-        // Parse the strings as dates
-        guard let date1 = formatter.date(from: this),
-              let date2 = formatter.date(from: that) else {
-          return false // Handle parsing errors as needed
-        }
-        
-        // Sort by date
-        return date1 > date2
-    }
 }
 
 #Preview {
