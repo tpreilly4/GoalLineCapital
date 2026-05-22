@@ -30,7 +30,7 @@ struct TipCalculatorView: View {
     var totalPerPerson: Double {
         return totalBill / Double(numberOfPeople)
     }
-    
+        
     var body: some View {
         NavigationStack{
             Form {
@@ -42,6 +42,15 @@ struct TipCalculatorView: View {
                 
                 Section("Tip Percentage") {
                     PercentSlider(value: $tipPercentage, range: 0...1, step: 0.01)
+                    HStack {
+                        Button("15%") { autofillTipPercentage(percentage: 0.15) }.layoutPriority(1).buttonStyle(.borderless)
+                        Spacer()
+                        Button("18%") { autofillTipPercentage(percentage: 0.18) }.layoutPriority(1).buttonStyle(.borderless)
+                        Spacer()
+                        Button("20%") { autofillTipPercentage(percentage: 0.20) }.layoutPriority(1).buttonStyle(.borderless)
+                        Spacer()
+                        Button("25%") { autofillTipPercentage(percentage: 0.25) }.layoutPriority(1).buttonStyle(.borderless)
+                    }
                 }
                 
                 Section{
@@ -80,6 +89,10 @@ struct TipCalculatorView: View {
             .scrollContentBackground(.hidden)
             .background(BrandingGradients().brandingGradient)
         }
+    }
+    
+    private func autofillTipPercentage(percentage: Double) {
+        tipPercentage = percentage
     }
 }
 
