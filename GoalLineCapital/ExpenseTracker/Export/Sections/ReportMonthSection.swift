@@ -10,7 +10,11 @@ import Charts
 
 struct ReportMonthSection: View {
     let month: String
-    let items: [ExpenseItem]
+    let allItems: [ExpenseItem]
+    let pageCategories: [(String, [ExpenseItem])]
+    let showSummary: Bool
+    let isLastPage: Bool
+    let isContinuation: Bool
 
     private struct CategoryData: Identifiable {
         let id = UUID()
@@ -18,17 +22,12 @@ struct ReportMonthSection: View {
         let total: Double
     }
 
-    private var groupedByCategory: [(String, [ExpenseItem])] {
-        let grouped = Dictionary(grouping: items) { $0.category?.name ?? "Uncategorized" }
-        return grouped.sorted { $0.key < $1.key }
-    }
-
     private var total: Double {
-        items.reduce(0) { $0 + $1.amount }
+        allItems.reduce(0) { $0 + $1.amount }
     }
 
     private var categoryData: [CategoryData] {
-        let grouped = Dictionary(grouping: items) { $0.category?.name ?? "Uncategorized" }
+        let grouped = Dictionary(grouping: allItems) { $0.category?.name ?? "Uncategorized" }
         return grouped.map { name, items in
             CategoryData(name: name, total: items.reduce(0) { $0 + $1.amount })
         }.sorted { $0.total > $1.total }
@@ -36,7 +35,7 @@ struct ReportMonthSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(month)
+            Text(isContinuation ? "\(month) (continued)" : month)
                 .font(.title2.weight(.bold))
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -44,23 +43,38 @@ struct ReportMonthSection: View {
                 .background(Color.goalLineBlue)
 
             VStack(alignment: .leading, spacing: 16) {
-                categoryPieChart
+                if showSummary {
+                    categoryPieChart
 
-                Divider()
+                    Divider()
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Total Spending")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    Text(total, format: .currency(code: "USD"))
-                        .font(.title.weight(.bold))
-                        .foregroundStyle(Color.goalLineBlue)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Monthly Total")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        Text(total, format: .currency(code: "USD"))
+                            .font(.title.weight(.bold))
+                            .foregroundStyle(Color.goalLineBlue)
+                    }
+
+                    Divider()
                 }
 
-                Divider()
-
-                ForEach(groupedByCategory, id: \.0) { categoryName, categoryItems in
+                ForEach(pageCategories, id: \.0) { categoryName, categoryItems in
                     categoryGroup(name: categoryName, items: categoryItems)
+                }
+
+                if isLastPage {
+                    Divider()
+
+                    HStack {
+                        Text("Month Total")
+                            .font(.subheadline.weight(.bold))
+                        Spacer()
+                        Text(total, format: .currency(code: "USD"))
+                            .font(.subheadline.weight(.bold))
+                            .foregroundStyle(Color.goalLineBlue)
+                    }
                 }
             }
             .padding()
