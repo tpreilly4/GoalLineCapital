@@ -1,6 +1,6 @@
 //
 //  MonthView.swift
-//  Dollarwise
+//  GoalLineCapital
 //
 //  Created by Tom Reilly on 4/2/24.
 //
@@ -14,6 +14,10 @@ struct MonthView: View {
     @State private var isGrouped = true
         
     private var month: String
+    
+    var monthlyTotal: Double {
+        monthExpenses.reduce(0) { $0 + $1.amount }
+    }
     
     init(thismonth: String) {
         month = thismonth
@@ -31,9 +35,16 @@ struct MonthView: View {
                 return ExpenseCategory.defaultCategory
             }
         }
-        
+        let colors = CategoryPieChartView.colorMap(for: monthExpenses)
+
         NavigationStack{
             List {
+                Section {
+                    DollarOutputView(title: "Total", value: monthlyTotal)
+                    CategoryPieChartView(items: monthExpenses)
+                        .padding(.vertical, 8)
+                }
+
                 if isGrouped {
                     ForEach(categorizedExpenses.keys.sorted {$0.name < $1.name}, id: \.id) { catkey in
                         Section() {
@@ -52,6 +63,9 @@ struct MonthView: View {
                             }
                         } header: {
                             HStack {
+                                Circle()
+                                    .fill(colors[catkey.name] ?? .gray)
+                                    .frame(width: 10, height: 10)
                                 Text(catkey.name)
                                 Spacer()
                                 Text((categorizedExpenses[catkey]!.reduce(0){$0 + $1.amount}), format: .currency(code: "USD"))

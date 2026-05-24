@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Charts
 
 struct ReportMonthSection: View {
     let month: String
@@ -16,21 +15,8 @@ struct ReportMonthSection: View {
     let isLastPage: Bool
     let isContinuation: Bool
 
-    private struct CategoryData: Identifiable {
-        let id = UUID()
-        let name: String
-        let total: Double
-    }
-
     private var total: Double {
         allItems.reduce(0) { $0 + $1.amount }
-    }
-
-    private var categoryData: [CategoryData] {
-        let grouped = Dictionary(grouping: allItems) { $0.category?.name ?? "Uncategorized" }
-        return grouped.map { name, items in
-            CategoryData(name: name, total: items.reduce(0) { $0 + $1.amount })
-        }.sorted { $0.total > $1.total }
     }
 
     var body: some View {
@@ -44,7 +30,7 @@ struct ReportMonthSection: View {
 
             VStack(alignment: .leading, spacing: 16) {
                 if showSummary {
-                    categoryPieChart
+                    CategoryPieChartView(items: allItems)
 
                     Divider()
 
@@ -81,36 +67,6 @@ struct ReportMonthSection: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(Color.white)
-    }
-
-    private var categoryPieChart: some View {
-        HStack(alignment: .top, spacing: 20) {
-            Chart(categoryData) { cat in
-                SectorMark(
-                    angle: .value("Amount", cat.total),
-                    innerRadius: .ratio(0.55),
-                    angularInset: 2
-                )
-                .cornerRadius(4)
-                .foregroundStyle(by: .value("Category", cat.name))
-            }
-            .chartLegend(.hidden)
-            .frame(width: 160, height: 160)
-
-            VStack(alignment: .leading, spacing: 6) {
-                ForEach(categoryData) { cat in
-                    HStack {
-                        Text(cat.name)
-                            .font(.caption)
-                            .lineLimit(1)
-                        Spacer()
-                        Text(cat.total, format: .currency(code: "USD"))
-                            .font(.caption.weight(.semibold))
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity)
-        }
     }
 
     private func categoryGroup(name: String, items: [ExpenseItem]) -> some View {
