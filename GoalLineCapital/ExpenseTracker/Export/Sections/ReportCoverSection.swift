@@ -18,7 +18,7 @@ struct ReportCoverSection: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 6) {
-                Text("GoalLine Capital")
+                Text("Goal Line Capital")
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.white)
                 Text("Expense Report")
@@ -48,7 +48,7 @@ struct ReportCoverSection: View {
 
             Spacer()
 
-            Text("Prepared with GoalLine Capital")
+            Text("Prepared with Goal Line Capital")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 32)

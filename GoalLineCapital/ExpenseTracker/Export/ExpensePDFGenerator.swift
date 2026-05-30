@@ -41,7 +41,7 @@ struct ExpensePDFGenerator {
         let grouped = Dictionary(grouping: filtered) { $0.monthAndYear }
         let sortedMonths = grouped.keys.sorted { monthYearSorter($0, $1) }
 
-        let safeName = "GoalLine_Report_\(startMonth)-\(endMonth)"
+        let safeName = "GoalLineCapital_Report_\(startMonth)-\(endMonth)"
             .replacingOccurrences(of: " ", with: "_")
         let url = FileManager.default.temporaryDirectory
             .appendingPathComponent(safeName)
